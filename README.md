@@ -120,14 +120,6 @@ app/src/main/java/com/example/netscan/
 
 ---
 
-## 📸 Captures d'écran
-
-<!-- Ajoutez vos captures dans un dossier docs/screenshots puis décommentez :
-| Mode Simple | Mode Expert |
-|:-:|:-:|
-| ![Simple](docs/screenshots/simple.png) | ![Expert](docs/screenshots/expert.png) |
--->
-
 ## 📦 Télécharger l'APK
 
 Les APK sont disponibles dans l'onglet **[Releases](../../releases)** du dépôt.
