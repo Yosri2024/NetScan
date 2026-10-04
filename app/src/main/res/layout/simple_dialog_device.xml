@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/layout/simple_dialog_device.xml -->
+<!-- Rôle : fiche d'un appareil Simple (Étape 3). -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/screen_padding"
+    android:background="?attr/colorSurface">
+
+    <TextView
+        android:id="@+id/text_device_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/screen_padding_xs"
+        android:textAppearance="@style/TextAppearance.NetScan.TitleLarge"
+        android:textColor="?attr/colorOnSurface" />
+
+    <TextView
+        android:id="@+id/text_device_ip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/screen_padding"
+        android:fontFamily="monospace"
+        android:textAppearance="@style/TextAppearance.NetScan.BodyMedium"
+        android:textColor="?attr/colorOnSurfaceVariant" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/screen_padding">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_mine"
+            style="@style/Widget.NetScan.Button.Filled"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_marginBottom="@dimen/screen_padding_small"
+            android:text="@string/simple_device_mine"
+            android:textAllCaps="false"
+            app:icon="@drawable/ic_device_ok"
+            app:iconGravity="start"
+            app:iconPadding="8dp"
+            android:elevation="2dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_unknown"
+            style="@style/Widget.NetScan.Button.Outlined"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/touch_target_min"
+            android:text="@string/simple_device_unknown"
+            android:textAllCaps="false"
+            app:icon="@drawable/ic_device_warning"
+            app:iconGravity="start"
+            app:iconPadding="8dp"
+            android:elevation="2dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_advice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/screen_padding_small"
+        android:background="?attr/colorSurfaceVariant"
+        android:padding="@dimen/screen_padding"
+        android:textAppearance="@style/TextAppearance.NetScan.BodyMedium"
+        android:textColor="?attr/colorOnSurface" />
+
+</LinearLayout>

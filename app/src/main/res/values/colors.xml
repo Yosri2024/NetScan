@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/values/colors.xml (thème clair) -->
+<!-- Rôle : palette du thème CLAIR. Les mêmes noms existent dans
+     values-night/colors.xml : le passage nuit/clair est automatique.
+     Palette Material 3 : vert primaire (confiance), bleu secondaire (tech),
+     gris neutres pour surfaces et texte. -->
+<resources>
+    <!-- Primary palette — vert professionnel (confiance, sécurité) -->
+    <color name="primary">#1B7F4A</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="primary_container">#D0F0DC</color>
+    <color name="on_primary_container">#0A2E0C</color>
+
+    <!-- Secondary palette — bleu électrique (technologie, modernité) -->
+    <color name="secondary">#2E7DFF</color>
+    <color name="on_secondary">#FFFFFF</color>
+    <color name="secondary_container">#D9E6FF</color>
+    <color name="on_secondary_container">#0A1E5C</color>
+
+    <!-- Tertiary palette — violet doux (accents) -->
+    <color name="tertiary">#7C50B8</color>
+    <color name="on_tertiary">#FFFFFF</color>
+    <color name="tertiary_container">#EADDFF</color>
+    <color name="on_tertiary_container">#2E005F</color>
+
+    <!-- Surface and background — neutres, aseptisés -->
+    <color name="background">#F8F9FA</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="on_surface">#1A1C1D</color>
+    <color name="surface_variant">#E9ECEF</color>
+    <color name="on_surface_variant">#6C7275</color>
+    <color name="outline">#B8BDBE</color>
+    <color name="outline_variant">#D6D9DC</color>
+
+    <!-- Error palette -->
+    <color name="error">#BA1A1F</color>
+    <color name="on_error">#FFFFFF</color>
+    <color name="error_container">#FFDADA</color>
+    <color name="on_error_container">#990001</color>
+
+    <!-- Status indicators — clairs et intuitifs -->
+    <color name="status_ok">#1B7F4A</color>
+    <color name="status_warning">#C75200</color>
+    <color name="status_on_primary">#FFFFFF</color>
+    <color name="status_on">#FFFFFF</color>
+    <color name="on_warning">#FFFFFF</color>
+
+    <!-- UI helpers -->
+    <color name="divider">#D6D9DC</color>
+    <color name="ripple">#1F7C4F33</color>
+    <color name="shadow">#00000020</color>
+</resources>

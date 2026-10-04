@@ -1,0 +1,11 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="?attr/colorPrimary">
+    <!-- Fichier : res/drawable/ic_device_ok.xml (Étape 3). Cercle coché. -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M12,2C6.5,2 2,6.5 2,12s4.5,10 10,10 10,-4.5 10,-10S17.5,2 12,2zM10,17l-5,-5 1.4,-1.4L10,14.2l7.6,-7.6L19,8l-9,9z" />
+</vector>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/layout/simple_activity_scan.xml -->
+<!-- Rôle : Écran 1 du mode Simple (Étape 3). ACCUEIL : pas de bouton
+     retour (racine de l'application). Pastille de mode, état réseau,
+     UN gros bouton, dernier scan, navigation basse. -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorBackground">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/top_app_bar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginTop="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/app_name"
+        app:titleTextAppearance="@style/TextAppearance.NetScan.Headline6"
+        app:subtitle="@string/simple_toolbar_subtitle" />
+
+    <!-- Pastille touchable : bascule Simple / Expert. -->
+    <TextView
+        android:id="@+id/pastille_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/touch_target_min"
+        android:layout_marginEnd="@dimen/screen_padding"
+        android:background="@drawable/bg_mode_chip"
+        android:clickable="true"
+        android:contentDescription="@string/mode_switch_description"
+        android:focusable="true"
+        android:gravity="center"
+        android:minWidth="@dimen/touch_target_min"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="@string/mode_simple_badge"
+        android:textAppearance="@style/TextAppearance.NetScan.LabelMedium"
+        android:textColor="?attr/colorOnPrimaryContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_app_bar"
+        android:layout_marginTop="8dp" />
+
+    <ImageView
+        android:id="@+id/image_wifi"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="32dp"
+        android:contentDescription="@string/simple_network_icon_description"
+        android:src="@drawable/ic_wifi"
+        app:tint="?attr/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_app_bar" />
+
+    <TextView
+        android:id="@+id/text_ssid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/simple_network_unknown"
+        android:textAppearance="@style/TextAppearance.NetScan.Headline5"
+        android:textColor="?attr/colorOnSurface"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image_wifi" />
+
+    <TextView
+        android:id="@+id/text_wifi_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/simple_network_connected"
+        android:textAppearance="@style/TextAppearance.NetScan.BodyMedium"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_ssid" />
+
+    <!-- Main Scan Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_scan"
+        style="@style/Widget.NetScan.Button.Filled"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/button_height_main"
+        android:layout_margin="@dimen/screen_padding"
+        android:layout_marginTop="32dp"
+        android:text="@string/simple_scan_button"
+        android:textSize="18sp"
+        app:icon="@drawable/ic_scan"
+        app:iconGravity="start"
+        app:iconPadding="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_wifi_state" />
+
+    <ProgressBar
+        android:id="@+id/scan_progress"
+        style="@style/Widget.NetScan.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="4dp"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_scan" />
+
+    <TextView
+        android:id="@+id/text_scanning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/simple_scanning"
+        android:textAppearance="@style/TextAppearance.NetScan.BodyMedium"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scan_progress" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_cancel"
+        style="@style/Widget.NetScan.Button.Outlined"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/touch_target_min"
+        android:layout_marginTop="8dp"
+        android:text="@string/simple_cancel"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_scanning" />
+
+    <!-- Last Scan Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_last_scan"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/screen_padding"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="?attr/colorSurface"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/screen_padding">
+
+            <TextView
+                android:id="@+id/text_last_scan_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/simple_last_scan_title"
+                android:textAppearance="@style/TextAppearance.NetScan.LabelLarge"
+                android:textColor="?attr/colorOnSurface" />
+
+            <TextView
+                android:id="@+id/text_last_scan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/simple_no_last_scan"
+                android:textAppearance="@style/TextAppearance.NetScan.BodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/simple_bottom_nav"
+        app:itemIconTint="@color/nav_item_colors"
+        app:itemTextColor="@color/nav_item_colors"
+        app:labelVisibilityMode="labeled" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

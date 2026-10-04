@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/drawable/bg_status_dot.xml -->
+<!-- Rôle : point de statut (Étape 3). Teinté en vert/orange par le code. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="#FFFFFF" />
+    <size
+        android:width="16dp"
+        android:height="16dp" />
+</shape>

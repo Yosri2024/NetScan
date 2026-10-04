@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : app/src/main/AndroidManifest.xml -->
+<!-- Rôle : manifest sécurisé (Étape 1). Permissions minimales, export verrouillé. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Réseau : état + sockets (scan local uniquement, aucun cloud). -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- SSID/BSSID : localisation requise (demande runtime à l'Étape 2). -->
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:maxSdkVersion="32" />
+    <!-- Déclarée avec FINE (exigé par le lint, même maxSdkVersion). -->
+    <uses-permission
+        android:name="android.permission.ACCESS_COARSE_LOCATION"
+        android:maxSdkVersion="32" />
+    <!-- Android 13+ : remplace la permission de localisation pour le Wi-Fi voisin. -->
+    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES"
+        android:usesPermissionFlags="neverForLocation"
+        tools:targetApi="31" />
+    <!-- Verrou multicast : fiabilise la découverte mDNS/NSD (Étape 2). -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+
+    <application
+        android:name=".NetScanApp"
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:theme="@style/Theme.NetScan"
+        android:allowBackup="false"
+        android:fullBackupOnly="false"
+        android:fullBackupContent="@xml/backup_rules"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:supportsRtl="true">
+
+        <!-- Premier lancement + routage vers le mode mémorisé (Étape 5).
+             Seule activité exportée : point d'entrée unique. -->
+        <activity
+            android:name=".ui.common.OnboardingActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- Écran 1 du mode Simple : interne, jamais exporté. -->
+        <activity
+            android:name=".ui.simple.SimpleScanActivity"
+            android:exported="false" />
+        <!-- Écran Expert (Étape 2) : interne, jamais exporté. -->
+        <activity
+            android:name=".ui.expert.ExpertScanActivity"
+            android:exported="false" />
+        <!-- Écran Résultats Simple (Étape 3) : interne, jamais exporté. -->
+        <activity
+            android:name=".ui.simple.SimpleResultsActivity"
+            android:exported="false" />
+        <!-- Historiques Simple + Expert (Étape 4) : internes. -->
+        <activity
+            android:name=".ui.simple.SimpleHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.expert.ExpertHistoryActivity"
+            android:exported="false" />
+        <!-- Réglages (Étape 5) : internes. -->
+        <activity
+            android:name=".ui.common.SettingsActivity"
+            android:exported="false" />
+    </application>
+</manifest>

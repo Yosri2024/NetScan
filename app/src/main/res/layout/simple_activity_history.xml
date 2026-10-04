@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/layout/simple_activity_history.xml -->
+<!-- Rôle : Écran 3 du mode Simple, "Mes derniers scans" (Étape 4). -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:background="?attr/colorBackground">
+
+    <!-- Barre du haut : retour + pastille de mode. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:background="?attr/colorSurface">
+
+        <ImageButton
+            android:id="@+id/button_back"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_marginStart="@dimen/screen_padding_small"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/common_back_description"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_back"
+            app:tint="?attr/colorOnSurface" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/pastille_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_marginEnd="@dimen/screen_padding"
+            android:background="@drawable/bg_mode_chip"
+            android:clickable="true"
+            android:contentDescription="@string/mode_switch_description"
+            android:focusable="true"
+            android:gravity="center"
+            android:minWidth="@dimen/touch_target_min"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="@string/mode_simple_badge"
+            android:textAppearance="@style/TextAppearance.NetScan.LabelMedium"
+            android:textColor="?attr/colorOnPrimaryContainer" />
+    </LinearLayout>
+
+    <!-- Bandeau orange : nouvel appareil depuis le scan précédent. -->
+    <FrameLayout
+        android:id="@+id/banner_new_device"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorWarning"
+        android:padding="@dimen/screen_padding_large"
+        android:visibility="gone"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/simple_history_new_device"
+            android:textAppearance="@style/TextAppearance.NetScan.BodyMedium"
+            android:textColor="?attr/colorOnWarning" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/text_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/screen_padding_large"
+        android:text="@string/simple_history_empty"
+        android:textAppearance="@style/TextAppearance.NetScan.BodyLarge"
+        android:textColor="?attr/colorOnSurface"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_scans"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:padding="@dimen/screen_padding" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_clear"
+        style="@style/Widget.NetScan.Button.Destructive"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/touch_target_min"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/screen_padding"
+        android:text="@string/simple_history_clear"
+        android:textAllCaps="false"
+        android:textColor="?attr/colorError" />
+
+</LinearLayout>

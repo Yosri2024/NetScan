@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/values-night/colors.xml (mode nuit) -->
+<!-- Rôle : mêmes noms que values/colors.xml, valeurs adaptées au thème sombre.
+     Palette Material 3 dark : vert primaires clairs, surfaces sombres,
+     contrastes élevés pour lisibilité et confort visuel. -->
+<resources>
+    <!-- Primary palette — vert clair (sombre : les primaires s'éclairent) -->
+    <color name="primary">#81C784</color>
+    <color name="on_primary">#003918</color>
+    <color name="primary_container">#2E5D3C</color>
+    <color name="on_primary_container">#D0F0DC</color>
+
+    <!-- Secondary palette — bleu électrique (sombre) -->
+    <color name="secondary">#9BB7FF</color>
+    <color name="on_secondary">#0A1E5C</color>
+    <color name="secondary_container">#1A3B8C</color>
+    <color name="on_secondary_container">#D9E6FF</color>
+
+    <!-- Tertiary palette — violet doux (sombre) -->
+    <color name="tertiary">#C9A3EE</color>
+    <color name="on_tertiary">#522982</color>
+    <color name="tertiary_container">#6E41B1</color>
+    <color name="on_tertiary_container">#EADDFF</color>
+
+    <!-- Surface and background — sombres -->
+    <color name="background">#0E100E</color>
+    <color name="surface">#141714</color>
+    <color name="on_surface">#E4E6E0</color>
+    <color name="surface_variant">#282B28</color>
+    <color name="on_surface_variant">#C4C7C0</color>
+    <color name="outline">#8E928B</color>
+    <color name="outline_variant">#525652</color>
+
+    <!-- Error palette -->
+    <color name="error">#F28B82</color>
+    <color name="on_error">#660002</color>
+    <color name="error_container">#93000A</color>
+    <color name="on_error_container">#FFDADA</color>
+
+    <!-- Status indicators — adaptés au sombre -->
+    <color name="status_ok">#81C784</color>
+    <color name="status_warning">#FFB74D</color>
+    <color name="status_on_primary">#003918</color>
+    <color name="status_on">#003918</color>
+    <color name="on_warning">#0E100E</color>
+
+    <!-- UI helpers -->
+    <color name="divider">#353834</color>
+    <color name="ripple">#2C7C4F33</color>
+    <color name="shadow">#20000000</color>
+</resources>

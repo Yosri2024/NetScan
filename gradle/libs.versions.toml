@@ -1,0 +1,51 @@
+# Fichier : NetScan/gradle/libs.versions.toml
+# Rôle : catalogue unique des versions (vérifiées stables, sept.-oct. 2026).
+# N'ajouter ici que des bibliothèques réelles et maintenues.
+
+[versions]
+# Build : AGP 9.1.0 (max supporté par le plugin Android d'IntelliJ ;
+# Android Studio Quail l'accepte aussi). Nécessite Gradle 9.3.1+.
+agp = "9.1.0"
+# SDK : Android 16 stable (API 36). Exigence Play Store (31/08/2026) et spec (35 min.).
+compileSdk = "36"
+targetSdk = "36"
+minSdk = "24"
+# Java 17 imposé par la spec.
+javaVersion = "17"
+# Bibliothèques AndroidX (stables vérifiées).
+appcompat = "1.8.0"
+material = "1.13.0"
+constraintlayout = "2.2.1"
+recyclerview = "1.3.2"
+activity = "1.13.0"
+lifecycle = "2.11.0"
+# Persistance chiffrée (utilisée à l'Étape 4, déclarée ici).
+room = "2.8.4"
+sqlite = "2.7.0"
+# SQLCipher 4.17.0 (juil. 2026) : dernière version SANS exigence compileSdk 37
+# (la 4.19.0 impose compileSdk 37, incompatible avec AGP 9.1.0 plafonné à 36).
+sqlcipher = "4.17.0"
+datastore = "1.2.1"
+# Export JSON (Étape 4).
+gson = "2.12.1"
+# Tests (Étape 5).
+junit = "4.13.2"
+
+[libraries]
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "lifecycle" }
+lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata", version.ref = "lifecycle" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-sqlite = { group = "androidx.sqlite", name = "sqlite", version.ref = "sqlite" }
+sqlcipher-android = { group = "net.zetetic", name = "sqlcipher-android", version.ref = "sqlcipher" }
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }

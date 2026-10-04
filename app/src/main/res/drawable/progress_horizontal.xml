@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/drawable/progress_horizontal.xml -->
+<!-- Rôle : drawable pour la barre de progression horizontale. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Fond de la barre -->
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <solid android:color="?attr/colorSurfaceVariant" />
+            <corners android:radius="4dp" />
+        </shape>
+    </item>
+    <!-- Progression -->
+    <item android:id="@android:id/progress">
+        <scale android:scaleWidth="100%">
+            <shape android:shape="rectangle">
+                <solid android:color="?attr/colorPrimary" />
+                <corners android:radius="4dp" />
+            </shape>
+        </scale>
+    </item>
+</layer-list>

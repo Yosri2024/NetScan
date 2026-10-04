@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/layout/common_activity_onboarding.xml -->
+<!-- Rôle : premier lancement. Présentation + légal + choix du mode. Design pro simple Material3. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorBackground"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorSurface"
+        app:title="@string/app_name"
+        app:titleCentered="true"
+        app:titleTextAppearance="@style/TextAppearance.NetScan.Headline6" />
+
+    <!-- État de chargement : visible pendant le préchargement DataStore -->
+    <ProgressBar
+        android:id="@+id/loading_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/screen_padding_large"
+        android:contentDescription="@string/app_name" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:id="@+id/content_onboarding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/screen_padding"
+            android:visibility="gone">
+
+            <!-- Hero pro simple -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/screen_padding_small"
+                android:layout_marginBottom="@dimen/screen_padding"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/image_hero"
+                    android:layout_width="@dimen/icon_size_large"
+                    android:layout_height="@dimen/icon_size_large"
+                    android:background="@color/primary_container"
+                    android:contentDescription="@string/app_name"
+                    android:padding="20dp"
+                    android:src="@drawable/ic_wifi"
+                    app:tint="?attr/colorPrimary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/screen_padding"
+                    android:gravity="center"
+                    android:text="@string/onboarding_title"
+                    android:textAppearance="@style/TextAppearance.NetScan.Headline4"
+                    android:textColor="?attr/colorOnSurface" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/screen_padding_small"
+                    android:gravity="center"
+                    android:text="@string/onboarding_text"
+                    android:textAppearance="@style/TextAppearance.NetScan.BodyMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+
+            </LinearLayout>
+
+            <!-- Carte légale -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/screen_padding"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="@dimen/card_elevation"
+                app:strokeColor="?attr/colorOutline"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/screen_padding">
+
+                    <ImageView
+                        android:layout_width="@dimen/icon_size_small"
+                        android:layout_height="@dimen/icon_size_small"
+                        android:layout_marginEnd="@dimen/screen_padding_small"
+                        android:contentDescription="@string/legal_title"
+                        android:src="@drawable/ic_device_warning"
+                        app:tint="?attr/colorWarning" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/legal_title"
+                            android:textAppearance="@style/TextAppearance.NetScan.Headline6"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/legal_text"
+                            android:textAppearance="@style/TextAppearance.NetScan.BodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/checkbox_legal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/touch_target_min"
+                            android:layout_marginTop="@dimen/screen_padding_small"
+                            android:text="@string/onboarding_legal_check"
+                            android:textAppearance="@style/TextAppearance.NetScan.BodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Choix du mode -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/screen_padding_small"
+                android:text="@string/onboarding_mode_label"
+                android:textAppearance="@style/TextAppearance.NetScan.Headline6"
+                android:textColor="?attr/colorOnSurface" />
+
+            <RadioGroup
+                android:id="@+id/radio_mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/screen_padding"
+                android:orientation="vertical">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/screen_padding_small"
+                    app:cardBackgroundColor="?attr/colorSurface"
+                    app:cardCornerRadius="@dimen/card_corner_radius"
+                    app:cardElevation="0dp"
+                    app:strokeColor="?attr/colorOutline"
+                    app:strokeWidth="1dp">
+
+                    <RadioButton
+                        android:id="@+id/radio_simple"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/touch_target_min"
+                        android:buttonTint="?attr/colorPrimary"
+                        android:checked="true"
+                        android:paddingStart="@dimen/screen_padding_small"
+                        android:paddingEnd="@dimen/screen_padding_small"
+                        android:text="@string/onboarding_mode_simple"
+                        android:textAppearance="@style/TextAppearance.NetScan.BodyLarge"
+                        android:textColor="?attr/colorOnSurface" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="?attr/colorSurface"
+                    app:cardCornerRadius="@dimen/card_corner_radius"
+                    app:cardElevation="0dp"
+                    app:strokeColor="?attr/colorOutline"
+                    app:strokeWidth="1dp">
+
+                    <RadioButton
+                        android:id="@+id/radio_expert"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/touch_target_min"
+                        android:buttonTint="?attr/colorPrimary"
+                        android:paddingStart="@dimen/screen_padding_small"
+                        android:paddingEnd="@dimen/screen_padding_small"
+                        android:text="@string/onboarding_mode_expert"
+                        android:textAppearance="@style/TextAppearance.NetScan.BodyLarge"
+                        android:textColor="?attr/colorOnSurface" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </RadioGroup>
+
+            <!-- CTA -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_start"
+                style="@style/Widget.NetScan.Button.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height_main"
+                android:enabled="false"
+                android:text="@string/onboarding_start"
+                app:icon="@drawable/ic_scan" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

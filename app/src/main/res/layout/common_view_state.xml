@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/layout/common_view_state.xml -->
+<!-- Rôle : panneau d'état chargement / vide / erreur (Étape 3).
+     Piloté par StateViewHelper ; réutilisé par les historiques (Étape 4). -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="@dimen/screen_padding">
+
+    <ProgressBar
+        android:id="@+id/state_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/state_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/state_retry"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/touch_target_min"
+        android:text="@string/common_retry"
+        android:visibility="gone" />
+
+</LinearLayout>

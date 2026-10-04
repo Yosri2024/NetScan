@@ -1,0 +1,10 @@
+# Fichier : NetScan/.gitignore (Étape 1).
+# Gradle / Android Studio.
+.gradle/
+local.properties
+*.iml
+.idea/
+app/build/
+build/
+# Système.
+.DS_Store

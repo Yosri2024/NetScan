@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/values/strings.xml -->
+<!-- Rôle : textes communs (aucun texte en dur dans les layouts). -->
+<resources>
+    <string name="app_name">NetScan</string>
+    <string name="simple_empty_state">Aucun scan pour l\'instant. Ici viendra le bouton « Scanner mon réseau » (Étape 3).</string>
+    <string name="legal_title">Avertissement</string>
+    <string name="legal_text">Ne scannez que vos propres réseaux ou ceux pour lesquels vous avez une autorisation. L\'identification des appareils est approximative : un nom affiché peut être inexact.</string>
+    <string name="legal_accept">J\'ai compris</string>
+    <string name="onboarding_title">Bienvenue dans NetScan</string>
+    <string name="onboarding_text">NetScan montre les appareils connectés à votre réseau local, en Wi-Fi comme en Ethernet (câble). Tout reste sur votre téléphone : aucun compte, aucun cloud, aucun service payant.</string>
+    <string name="onboarding_legal_check">J\'ai compris : je ne scannerai que mes propres réseaux.</string>
+    <string name="onboarding_mode_label">Choisissez votre mode :</string>
+    <string name="onboarding_mode_simple">Mode simple — langage courant (recommandé)</string>
+    <string name="onboarding_mode_expert">Mode expert — IP, ports et détails</string>
+    <string name="onboarding_start">Commencer</string>
+    <string name="settings_title">Réglages</string>
+    <string name="settings_mode_label">Mode de l\'application</string>
+    <string name="settings_theme_label">Thème (mode nuit)</string>
+    <string name="settings_theme_system">Comme le téléphone</string>
+    <string name="settings_theme_light">Clair</string>
+    <string name="settings_theme_dark">Sombre</string>
+    <string name="settings_legal">Relire l\'avertissement légal</string>
+    <string name="settings_about_format">NetScan %1$s — licence MIT, 100 %% local.</string>
+    <string name="settings_cleared">Historique effacé.</string>
+    <string name="common_back_description">Retour</string>
+    <!-- Réseau local : Wi-Fi, Ethernet (câble), USB, VPN... -->
+    <string name="network_required">Aucun réseau local détecté. Branchez un câble Ethernet ou connectez-vous au Wi-Fi.</string>
+    <string name="network_disconnected">Aucun réseau local détecté.</string>
+    <string name="history_unavailable">Historique indisponible : la base chiffrée n\'a pas pu être ouverte sur cet appareil.</string>
+    <!-- Compléments pro simple : manquants référencés par le code / layouts -->
+    <string name="cancel">Annuler</string>
+    <string name="common_retry">Réessayer</string>
+    <string name="mode_simple_badge">Simple</string>
+    <string name="mode_expert_badge">Expert</string>
+    <string name="mode_switch_description">Changer de mode</string>
+    <string name="simple_history_empty">Aucun scan pour l\'instant.</string>
+    <string name="simple_history_clear">Effacer l\'historique</string>
+    <string name="simple_history_clear_title">Effacer l\'historique ?</string>
+    <string name="simple_history_clear_message">Supprimer définitivement tous les scans enregistrés ?</string>
+    <string name="simple_history_clear_yes">Effacer</string>
+    <string name="simple_history_new_device">Nouvel appareil détecté depuis le dernier scan.</string>
+    <string name="simple_status_dot_description">Indicateur d\'état</string>
+    <string name="simple_device_mine">C\'est mon appareil</string>
+    <string name="simple_device_unknown">Je ne reconnais pas</string>
+    <string name="expert_history_title">Historique expert</string>
+    <string name="expert_history_empty">Aucun scan enregistré pour l\'instant.</string>
+    <string name="expert_filter_all">Tous</string>
+    <string name="expert_filter_week">Semaine</string>
+    <string name="expert_filter_month">Mois</string>
+    <string name="expert_export_json">JSON</string>
+    <string name="expert_export_csv">CSV</string>
+    <string name="expert_export_done">Export réussi</string>
+    <string name="expert_export_failed">Échec de l\'export</string>
+    <string name="expert_history_stats_format">%1$d hôtes • %2$s</string>
+    <string name="expert_network_format">%1$s • %2$s • IP %3$s • passerelle %4$s • %5$s</string>
+    <string name="expert_progress_format">%1$d / %2$d</string>
+    <string name="expert_status_scanning">Scan en cours…</string>
+    <string name="expert_status_no_hosts">Aucun hôte détecté.</string>
+    <string name="expert_status_done_format">%1$d hôte(s) détecté(s)</string>
+    <string name="expert_status_permission_denied">Permission refusée : le nom du Wi-Fi restera masqué, le scan reste possible.</string>
+    <string name="expert_unknown">Inconnu</string>
+    <string name="expert_open_settings">Réglages</string>
+    <string name="nav_scan">Scanner</string>
+    <string name="nav_history">Historique</string>
+    <string name="nav_settings">Réglages</string>
+</resources>

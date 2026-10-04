@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/xml/data_extraction_rules.xml -->
+<!-- Rôle : même exclusion pour Android 12+ (sauvegardes cloud). -->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="database" path="." />
+        <exclude domain="sharedpref" path="." />
+        <exclude domain="file" path="datastore/" />
+    </cloud-backup>
+</data-extraction-rules>

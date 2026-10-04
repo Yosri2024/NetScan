@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/layout/common_dialog_legal.xml -->
+<!-- Rôle : avertissement légal (Étape 5). Bouton unique, non contournable. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/screen_padding"
+    android:background="?attr/colorSurface"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/screen_padding"
+        android:src="@drawable/ic_device_warning"
+        app:tint="?attr/colorWarning"
+        android:contentDescription="@string/legal_title" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/screen_padding"
+        android:text="@string/legal_title"
+        android:textAppearance="@style/TextAppearance.NetScan.TitleLarge"
+        android:textColor="?attr/colorOnSurface"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/screen_padding"
+        android:text="@string/legal_text"
+        android:textAppearance="@style/TextAppearance.NetScan.BodyMedium"
+        android:textColor="?attr/colorOnSurface" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_accept"
+        style="@style/Widget.NetScan.Button.Filled"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/touch_target_min"
+        android:text="@string/legal_accept"
+        android:textAllCaps="false"
+        android:elevation="2dp" />
+
+</LinearLayout>

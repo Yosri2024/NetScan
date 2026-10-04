@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/xml/backup_rules.xml -->
+<!-- Rôle : exclut les données chiffrées des sauvegardes (Étapes 1-4). -->
+<full-backup-content>
+    <!-- La base SQLCipher et le DataStore ne doivent jamais partir en clair. -->
+    <exclude domain="database" path="." />
+    <exclude domain="sharedpref" path="." />
+    <exclude domain="file" path="datastore/" />
+</full-backup-content>

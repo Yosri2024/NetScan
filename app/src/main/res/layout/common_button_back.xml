@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/layout/common_button_back.xml -->
+<!-- Rôle : bouton retour, inséré en haut de chaque écran (hors onboarding
+     et avertissement légal, volontairement sans retour possible).
+     Zone tactile 48dp minimum, description pour TalkBack. -->
+<ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/button_back"
+    android:layout_width="@dimen/touch_target_min"
+    android:layout_height="@dimen/touch_target_min"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:contentDescription="@string/common_back_description"
+    android:focusable="true"
+    android:scaleType="centerInside"
+    android:src="@drawable/ic_back" />

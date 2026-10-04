@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/layout/common_activity_settings.xml -->
+<!-- Rôle : écran Réglages (Étape 5). Retour, mode, thème (mode nuit),
+     historique, légal, à-propos. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/screen_padding">
+
+        <!-- Barre du haut : retour + titre. -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <include
+                layout="@layout/common_button_back"
+                android:layout_width="@dimen/touch_target_min"
+                android:layout_height="@dimen/touch_target_min" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/screen_padding"
+                android:text="@string/settings_title"
+                android:textAppearance="?attr/textAppearanceHeadlineMedium" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_mode_label"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+        <RadioGroup
+            android:id="@+id/radio_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/radio_simple"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/touch_target_min"
+                android:text="@string/onboarding_mode_simple"
+                android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+            <RadioButton
+                android:id="@+id/radio_expert"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/touch_target_min"
+                android:text="@string/onboarding_mode_expert"
+                android:textAppearance="?attr/textAppearanceBodyLarge" />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_theme_label"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+        <RadioGroup
+            android:id="@+id/radio_theme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/radio_theme_system"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/touch_target_min"
+                android:text="@string/settings_theme_system"
+                android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+            <RadioButton
+                android:id="@+id/radio_theme_light"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/touch_target_min"
+                android:text="@string/settings_theme_light"
+                android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+            <RadioButton
+                android:id="@+id/radio_theme_dark"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/touch_target_min"
+                android:text="@string/settings_theme_dark"
+                android:textAppearance="?attr/textAppearanceBodyLarge" />
+        </RadioGroup>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_clear_history"
+            style="@style/Widget.NetScan.Button.Destructive"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/touch_target_min"
+            android:text="@string/simple_history_clear" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_legal"
+            style="@style/Widget.NetScan.Button.Outlined"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/touch_target_min"
+            android:text="@string/settings_legal" />
+
+        <TextView
+            android:id="@+id/text_about"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBodyMedium" />
+    </LinearLayout>
+</ScrollView>

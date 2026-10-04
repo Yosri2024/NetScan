@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/drawable/nav_item_colors.xml -->
+<!-- Rôle : Color state list pour les items de navigation basse. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- État sélectionné -->
+    <item android:color="?attr/colorPrimary" android:state_checked="true" />
+    <!-- État non sélectionné -->
+    <item android:color="?attr/colorOnSurfaceVariant" />
+</selector>

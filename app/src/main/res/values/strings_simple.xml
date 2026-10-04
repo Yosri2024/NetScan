@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/values/strings_simple.xml -->
+<!-- Rôle : textes spécifiques au mode simple : boutons, avertissements, descriptions. -->
+<resources>
+    <string name="simple_toolbar_subtitle">Votre réseau, sous votre contrôle</string>
+    <string name="simple_scan_button">Scanner mon réseau</string>
+    <string name="simple_scan_button_description">Lance le scan de votre réseau local</string>
+    <string name="simple_scanning">Scan en cours…</string>
+    <string name="simple_scanning_description">Cette opération peut prendre quelques secondes</string>
+    <string name="simple_cancel">Annuler</string>
+    <string name="simple_cancel_description">Annule le scan en cours</string>
+    <string name="simple_last_scan_title">Dernier scan</string>
+    <string name="simple_last_scan_title_description">Affiche la date et l\'heure du dernier scan</string>
+    <string name="simple_no_last_scan">Aucun scan réalisé pour l\'instant</string>
+    <string name="simple_last_scan_format">Le %1$s à %2$s</string>
+    <string name="simple_last_scan_devices_format">%1$d appareil(s) détecté(s)</string>
+    <string name="simple_results_title">Résultats du scan</string>
+    <string name="simple_results_title_description">Liste les appareils détectés sur votre réseau</string>
+    <string name="simple_results_empty">Aucun appareil détecté. Vérifiez votre connexion réseau.</string>
+    <string name="simple_results_empty_description">Assurez-vous d\'être connecté à un réseau (Wi-Fi ou Ethernet)</string>
+    <string name="simple_network_icon_description">Icône du réseau local</string>
+    <string name="simple_network_unknown">Réseau inconnu</string>
+    <string name="simple_network_connected">Connecté</string>
+    <string name="simple_network_disconnected">Déconnecté</string>
+    <string name="simple_advice_empty">Aucun conseil particulier</string>
+    <string name="simple_advice_empty_description">Tout semble en ordre sur votre réseau</string>
+    <string name="simple_advice_warning">Vérifiez les appareils non reconnus</string>
+    <string name="simple_advice_warning_description">Les appareils marqués en orange nécessitent votre attention</string>
+    <string name="simple_advice_danger">Action recommandée</string>
+    <string name="simple_advice_danger_description">Des anomalies ont été détectées sur votre réseau</string>
+</resources>

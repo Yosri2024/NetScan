@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/values/themes.xml -->
+<!-- Rôle : thème UNIQUE, parent DayNight : la nuit est prise en charge
+     par values-night/colors.xml, sans dupliquer le style. Le choix
+     Utilisateur (système / clair / sombre) passe par AppCompatDelegate
+     (voir mode/ThemeManager). Toutes les couleurs nommées sont câblées
+     ici : sinon les composants Material retombent sur le violet de base. -->
+<resources>
+    <style name="Theme.NetScan" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary colors -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorPrimaryContainer">@color/primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/on_primary_container</item>
+
+        <!-- Secondary colors -->
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/on_secondary</item>
+        <item name="colorSecondaryContainer">@color/secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/on_secondary_container</item>
+
+        <!-- Surface and background -->
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
+        <item name="colorBackground">@color/background</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="android:windowBackground">@color/background</item>
+
+        <!-- Outline and errors -->
+        <item name="colorOutline">@color/outline</item>
+        <item name="colorError">@color/error</item>
+        <item name="colorOnError">@color/on_error</item>
+        <item name="colorErrorContainer">@color/error_container</item>
+        <item name="colorOnErrorContainer">@color/on_error_container</item>
+
+        <!-- Status indicators (custom attrs, voir attrs.xml) -->
+        <item name="colorSuccess">@color/status_ok</item>
+        <item name="colorWarning">@color/status_warning</item>
+        <item name="colorOnWarning">@color/on_warning</item>
+
+        <!-- Button styles (attrs standards uniquement) -->
+        <item name="buttonStyle">@style/Widget.NetScan.Button</item>
+        <item name="borderlessButtonStyle">@style/Widget.NetScan.Button.Borderless</item>
+
+        <!-- Input styles -->
+        <item name="textInputStyle">@style/Widget.NetScan.TextInputLayout</item>
+        <item name="editTextStyle">@style/Widget.NetScan.EditText</item>
+
+        <!-- Progress bar -->
+        <item name="android:progressBarStyleHorizontal">@style/Widget.NetScan.ProgressBar.Horizontal</item>
+
+        <!-- Bottom navigation -->
+        <item name="bottomNavigationStyle">@style/Widget.NetScan.BottomNavigationView</item>
+    </style>
+
+    <!-- Custom text appearances -->
+    <style name="TextAppearance.NetScan.Headline1" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">32sp</item>
+    </style>
+
+    <style name="TextAppearance.NetScan.Headline2" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">28sp</item>
+    </style>
+
+    <style name="TextAppearance.NetScan.Headline3" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="TextAppearance.NetScan.Headline4" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TextAppearance.NetScan.Headline5" parent="TextAppearance.Material3.TitleMedium">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextAppearance.NetScan.Headline6" parent="TextAppearance.Material3.TitleSmall">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextAppearance.NetScan.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextAppearance.NetScan.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearance.NetScan.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="TextAppearance.NetScan.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="TextAppearance.NetScan.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="TextAppearance.NetScan.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <!-- Alias Title (utilisés par plusieurs layouts) -->
+    <style name="TextAppearance.NetScan.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="TextAppearance.NetScan.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Custom button styles -->
+    <style name="Widget.NetScan.Button" parent="Widget.Material3.Button">
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">24dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingRight">24dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+
+    <style name="Widget.NetScan.Button.Borderless" parent="Widget.Material3.Button.TextButton">
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="Widget.NetScan.Button.Filled" parent="Widget.Material3.Button">
+        <item name="android:paddingLeft">24dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingRight">24dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+
+    <style name="Widget.NetScan.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:paddingLeft">24dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingRight">24dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <!-- Action destructive : « Effacer », « Supprimer ». Contour + texte
+         en couleur d'erreur, jamais le bouton plein (sinon elle passe pour
+         l'action principale). -->
+    <style name="Widget.NetScan.Button.Destructive" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">@dimen/touch_target_min</item>
+        <item name="android:paddingLeft">24dp</item>
+        <item name="android:paddingRight">24dp</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:textColor">?attr/colorError</item>
+        <item name="strokeColor">?attr/colorError</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <!-- Custom input styles -->
+    <style name="Widget.NetScan.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="hintEnabled">true</item>
+        <item name="helperTextEnabled">true</item>
+        <item name="errorEnabled">true</item>
+        <item name="counterEnabled">false</item>
+        <item name="boxBackgroundColor">@color/surface</item>
+    </style>
+
+    <style name="Widget.NetScan.EditText" parent="Widget.Material3.TextInputEditText.OutlinedBox">
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Custom progress bar -->
+    <style name="Widget.NetScan.ProgressBar.Horizontal" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:minHeight">4dp</item>
+        <item name="android:maxHeight">4dp</item>
+        <item name="android:progressDrawable">@drawable/progress_horizontal</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_horizontal</item>
+    </style>
+
+    <!-- Custom bottom navigation -->
+    <style name="Widget.NetScan.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">@color/surface</item>
+        <item name="itemActiveIndicatorStyle">@style/Widget.NetScan.BottomNavigationView.ActiveIndicator</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+
+    <style name="Widget.NetScan.BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:height">3dp</item>
+        <item name="android:color">@color/primary</item>
+    </style>
+</resources>

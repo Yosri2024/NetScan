@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/values/arrays.xml -->
+<!-- Rôle : préréglages ports Expert, ordre aligné sur ScanConfig (0=1-1024, 1=1-65535, 2=custom). -->
+<resources>
+    <string-array name="port_presets">
+        <item>@string/expert_ports_option_privileged</item>
+        <item>@string/expert_ports_option_full</item>
+        <item>@string/expert_ports_option_specific</item>
+    </string-array>
+</resources>

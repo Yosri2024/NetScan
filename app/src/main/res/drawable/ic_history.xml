@@ -1,0 +1,11 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="?attr/colorPrimary">
+    <!-- Fichier : res/drawable/ic_history.xml (Étape 3). Horloge + flèche. -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M13,3c-5,0 -9,4 -9,9H1l3.9,3.9L9,12H6c0,-3.9 3.1,-7 7,-7s7,3.1 7,7 -3.1,7 -7,7c-1.9,0 -3.7,-0.8 -4.9,-2.1l-1.4,1.4C8.3,20 10.5,21 13,21c5,0 9,-4 9,-9s-4,-9 -9,-9zM12,8v5l4.3,2.5 0.7,-1.2 -3.5,-2.1V8H12z" />
+</vector>

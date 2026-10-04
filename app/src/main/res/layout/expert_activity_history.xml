@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/layout/expert_activity_history.xml -->
+<!-- Rôle : historique détaillé Expert (Étape 4). Retour + filtres + stats. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:background="?attr/colorBackground">
+
+    <!-- Barre du haut : retour + titre. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:background="?attr/colorSurface">
+
+        <include
+            layout="@layout/common_button_back"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/screen_padding"
+            android:text="@string/expert_history_title"
+            android:textAppearance="@style/TextAppearance.NetScan.Headline5"
+            android:textColor="?attr/colorOnSurface" />
+    </LinearLayout>
+
+    <!-- Filtres -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/screen_padding_large">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_filter_all"
+            style="@style/Widget.NetScan.Button.Outlined"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_weight="1"
+            android:text="@string/expert_filter_all"
+            android:textAllCaps="false"
+            android:layout_marginEnd="@dimen/screen_padding_small"
+            android:elevation="2dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_filter_week"
+            style="@style/Widget.NetScan.Button.Outlined"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_weight="1"
+            android:text="@string/expert_filter_week"
+            android:textAllCaps="false"
+            android:layout_marginEnd="@dimen/screen_padding_small"
+            android:elevation="2dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_filter_month"
+            style="@style/Widget.NetScan.Button.Outlined"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_weight="1"
+            android:text="@string/expert_filter_month"
+            android:textAllCaps="false"
+            android:elevation="2dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/screen_padding_large"
+        android:text="@string/expert_history_empty"
+        android:textAppearance="@style/TextAppearance.NetScan.BodyLarge"
+        android:textColor="?attr/colorOnSurface"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_scans"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:padding="@dimen/screen_padding" />
+
+</LinearLayout>
