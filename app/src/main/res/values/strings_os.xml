@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/values/strings_os.xml -->
+<!-- Rôle : textes de l'identification du système d'exploitation (Simple + Expert). -->
+<resources>
+    <string name="os_section_title">Système d\'exploitation</string>
+    <string name="os_chip_uncertain_format">%1$s ?</string>
+    <string name="os_confidence_format">Confiance : %1$s</string>
+    <string name="os_evidence_title">Indices retenus</string>
+    <string name="os_evidence_none">Aucun indice : cet appareil ne répond sur aucun port courant et n\'annonce pas son nom.</string>
+    <string name="os_hint">Estimation indicative : sans accès administrateur, Android ne permet pas d\'être certain du système.</string>
+    <string name="os_this_device_reason">Appareil qui exécute NetScan</string>
+    <string name="os_gateway_reason">Passerelle du réseau (box ou routeur)</string>
+    <string name="os_android_format">Android %1$s</string>
+    <string name="os_ttl_format">TTL du ping : %1$d</string>
+    <string name="os_ttl_unknown">TTL du ping : indisponible</string>
+</resources>

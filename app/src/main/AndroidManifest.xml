@@ -52,7 +52,8 @@
         <!-- Écran Expert (Étape 2) : interne, jamais exporté. -->
         <activity
             android:name=".ui.expert.ExpertScanActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <!-- Écran Résultats Simple (Étape 3) : interne, jamais exporté. -->
         <activity
             android:name=".ui.simple.SimpleResultsActivity"

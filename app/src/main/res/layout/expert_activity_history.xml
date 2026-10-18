@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Fichier : res/layout/expert_activity_history.xml -->
-<!-- Rôle : historique détaillé Expert (Étape 4). Retour + filtres + stats. -->
+<!-- Rôle : historique détaillé Expert (refonte). Retour + titre, filtres en
+     groupe segmenté (le filtre actif est visible, avec marges : avant, les
+     boutons touchaient les bords de l'écran), liste des scans. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorBackground"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    android:background="?attr/colorBackground">
+    android:orientation="vertical">
 
     <!-- Barre du haut : retour + titre. -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface"
         android:gravity="center_vertical"
+        android:minHeight="?attr/actionBarSize"
         android:orientation="horizontal"
-        android:background="?attr/colorSurface">
+        android:paddingStart="@dimen/screen_padding_small"
+        android:paddingEnd="@dimen/screen_padding">
 
         <include
             layout="@layout/common_button_back"
@@ -24,69 +30,75 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/screen_padding_small"
             android:layout_weight="1"
-            android:layout_marginStart="@dimen/screen_padding"
             android:text="@string/expert_history_title"
             android:textAppearance="@style/TextAppearance.NetScan.Headline5"
             android:textColor="?attr/colorOnSurface" />
     </LinearLayout>
 
-    <!-- Filtres -->
-    <LinearLayout
+    <!-- Filtres : groupe segmenté, un seul actif -->
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/group_filters"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="@dimen/screen_padding_large">
+        android:layout_margin="@dimen/screen_padding"
+        app:checkedButton="@id/button_filter_all"
+        app:selectionRequired="true"
+        app:singleSelection="true">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_filter_all"
-            style="@style/Widget.NetScan.Button.Outlined"
+            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="0dp"
-            android:layout_height="@dimen/touch_target_min"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/expert_filter_all"
-            android:textAllCaps="false"
-            android:layout_marginEnd="@dimen/screen_padding_small"
-            android:elevation="2dp" />
+            android:minHeight="@dimen/touch_target_min"
+            android:text="@string/expert_filter_all" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_filter_week"
-            style="@style/Widget.NetScan.Button.Outlined"
+            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="0dp"
-            android:layout_height="@dimen/touch_target_min"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/expert_filter_week"
-            android:textAllCaps="false"
-            android:layout_marginEnd="@dimen/screen_padding_small"
-            android:elevation="2dp" />
+            android:minHeight="@dimen/touch_target_min"
+            android:text="@string/expert_filter_week" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_filter_month"
-            style="@style/Widget.NetScan.Button.Outlined"
+            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="0dp"
-            android:layout_height="@dimen/touch_target_min"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/expert_filter_month"
-            android:textAllCaps="false"
-            android:elevation="2dp" />
-    </LinearLayout>
+            android:minHeight="@dimen/touch_target_min"
+            android:text="@string/expert_filter_month" />
+    </com.google.android.material.button.MaterialButtonToggleGroup>
 
-    <TextView
-        android:id="@+id/text_empty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/screen_padding_large"
-        android:text="@string/expert_history_empty"
-        android:textAppearance="@style/TextAppearance.NetScan.BodyLarge"
-        android:textColor="?attr/colorOnSurface"
-        android:visibility="gone" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_scans"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:padding="@dimen/screen_padding" />
+        android:layout_weight="1">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_scans"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/screen_padding"
+            android:paddingEnd="@dimen/screen_padding"
+            android:paddingBottom="@dimen/screen_padding" />
+
+        <TextView
+            android:id="@+id/text_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="@dimen/screen_padding_large"
+            android:text="@string/expert_history_empty"
+            android:textAppearance="@style/TextAppearance.NetScan.BodyLarge"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:visibility="gone" />
+    </FrameLayout>
 </LinearLayout>

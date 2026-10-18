@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fichier : res/values/strings_scan.xml -->
+<!-- Rôle : textes des écrans de scan refaits (Simple et Expert) et des fiches d'appareil. -->
+<resources>
+    <!-- Étapes du scan -->
+    <string name="scan_phase_discovery">Recherche des appareils…</string>
+    <string name="scan_phase_os">Identification des systèmes…</string>
+    <string name="scan_phase_ports">Analyse des ports…</string>
+    <string name="scan_cancelled">Scan annulé.</string>
+    <string name="scan_cancelling">Annulation…</string>
+
+    <!-- Simple -->
+    <string name="simple_hero_ready">Prêt à scanner</string>
+    <string name="simple_scan_hint">Détecte les appareils connectés et estime leur système (Windows, Android, Apple, Linux…).</string>
+    <string name="simple_view_results">Voir les résultats</string>
+    <string name="simple_status_check">À vérifier</string>
+    <string name="simple_status_known">Reconnu</string>
+    <string name="simple_device_this">Cet appareil</string>
+    <string name="simple_device_close">Fermer</string>
+    <string name="simple_advice_title">Conseils (touchez pour afficher)</string>
+
+    <!-- Expert -->
+    <string name="expert_section_network">Réseau</string>
+    <string name="expert_section_config">Configuration</string>
+    <string name="expert_section_results">Appareils détectés</string>
+    <string name="expert_preset_common">1-1024</string>
+    <string name="expert_preset_all">1-65535</string>
+    <string name="expert_preset_custom">Personnalisés</string>
+    <string name="expert_custom_ports_label">Ports (ex. 22, 80, 8000-8010)</string>
+    <string name="expert_os_label">Identifier le système (OS)</string>
+    <string name="expert_os_helper">Ping (TTL), ports signatures et bannières HTTP/SSH. Désactivez pour un scan plus discret.</string>
+    <string name="expert_start_scan">Démarrer le scan</string>
+    <string name="expert_stop_scan">Arrêter le scan</string>
+    <string name="expert_results_count_format">%1$d appareil(s)</string>
+    <string name="expert_results_empty">Aucun résultat pour l\'instant. Configurez puis lancez un scan.</string>
+    <string name="expert_detect_description">Détecter le réseau actuel</string>
+    <string name="expert_host_close">Fermer</string>
+    <string name="expert_detail_name">Nom</string>
+    <string name="expert_detail_latency">Latence</string>
+    <string name="expert_detail_ports">Ports ouverts</string>
+    <string name="expert_detail_banners">Bannières</string>
+    <string name="expert_detail_services">Services mDNS</string>
+    <string name="expert_detail_os">Système</string>
+    <string name="expert_detail_none">aucun</string>
+    <string name="expert_last_results_note">Résultats du dernier scan</string>
+</resources>

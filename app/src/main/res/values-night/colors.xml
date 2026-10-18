@@ -48,4 +48,14 @@
     <color name="divider">#353834</color>
     <color name="ripple">#2C7C4F33</color>
     <color name="shadow">#20000000</color>
+
+    <!-- Familles d'OS (pastilles) -->
+    <color name="os_amber_bg">#5C3B00</color>
+    <color name="os_amber_fg">#FFE2B0</color>
+    <color name="os_teal_bg">#0F4A44</color>
+    <color name="os_teal_fg">#BDF0E8</color>
+    <color name="os_rose_bg">#6B1A33</color>
+    <color name="os_rose_fg">#FFD9E2</color>
+    <color name="os_slate_bg">#3A4553</color>
+    <color name="os_slate_fg">#DDE3EA</color>
 </resources>

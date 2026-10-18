@@ -10,7 +10,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.example.netscan.data.db.AppDatabase;
 import com.example.netscan.data.db.HostEntity;
 import com.example.netscan.data.db.KnownDeviceEntity;
+import com.example.netscan.data.ScanRepository;
 import com.example.netscan.data.db.ScanEntity;
+import com.example.netscan.data.model.Host;
+import com.example.netscan.data.model.OsInfo;
 
 import org.junit.After;
 import org.junit.Before;
@@ -73,5 +76,32 @@ public class ScanRepositoryTest {
         List<KnownDeviceEntity> tous = db.knownDeviceDao().allSync();
         assertEquals(1, tous.size());
         assertEquals("192.168.1.20", tous.get(0).ip);
+    }
+    @Test
+    public void os_estime_persiste_puis_relu() {
+        long id = db.scanDao().insertScan(new ScanEntity(
+                System.currentTimeMillis(), "TestWiFi", "192.168.1.10", "192.168.1.1", 1, 0, 0, 100));
+        HostEntity host = new HostEntity(id, "192.168.1.30", "DESKTOP-ABC", 5, "445", null, null);
+        host.osCode = "WINDOWS|HIGH|0";
+        db.scanDao().insertHosts(Collections.singletonList(host));
+
+        HostEntity relu = db.scanDao().hostsForScan(id).get(0);
+        Host affiche = ScanRepository.toHost(relu);
+        assertEquals(OsInfo.Family.WINDOWS, affiche.getOs().family());
+        assertEquals(OsInfo.Confidence.HIGH, affiche.getOs().confidence());
+    }
+
+    @Test
+    public void ancien_scan_sans_os_est_recalcule() {
+        long id = db.scanDao().insertScan(new ScanEntity(
+                System.currentTimeMillis(), null, null, null, 1, 0, 0, 100));
+        // Scan d'avant la v2 : osCode absent -> l'OS se déduit du nom et des ports.
+        HostEntity host = new HostEntity(id, "192.168.1.31", "HP-LaserJet", 5, "9100", null, null);
+        db.scanDao().insertHosts(Collections.singletonList(host));
+
+        Host affiche = ScanRepository.toHost(db.scanDao().hostsForScan(id).get(0));
+        assertEquals(null, affiche.getOs());
+        assertEquals(OsInfo.Family.PRINTER,
+                com.example.netscan.utils.OsGuesser.analyze(affiche).family());
     }
 }

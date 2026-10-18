@@ -2,6 +2,10 @@ package com.example.netscan;
 
 import android.app.Application;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelStore;
+import androidx.lifecycle.ViewModelStoreOwner;
+
 import com.example.netscan.data.model.Host;
 import com.example.netscan.data.model.ScanConfig;
 
@@ -15,7 +19,12 @@ import java.util.Set;
 // Garde le dernier scan et les appareils marqués "à moi" pour que la
 // bascule Simple/Expert ne perde pas l'état (migré vers Room à l'Étape 4).
 // Applique aussi le thème choisi par l'utilisateur (mode nuit).
-public class NetScanApp extends Application {
+public class NetScanApp extends Application implements ViewModelStoreOwner {
+
+    // Magasin de ViewModel lié au PROCESSUS : le scan (état, résultats, annulation)
+    // survit au passage Simple <-> Expert, aux réglages et aux rotations au lieu
+    // d'être détruit avec chaque écran. Voir ScanViewModel.get(Activity).
+    private final ViewModelStore viewModelStore = new ViewModelStore();
 
     // Dernier scan terminé (copie). Lu par SimpleResultsActivity.
     private final List<Host> lastHosts = new ArrayList<>();
@@ -24,6 +33,12 @@ public class NetScanApp extends Application {
     private String lastGatewayIp;
     // Appareils marqués "C'est mon appareil" (mémoire vive ; base Étape 4).
     private final Set<String> knownIps = new HashSet<>();
+
+    @NonNull
+    @Override
+    public ViewModelStore getViewModelStore() {
+        return viewModelStore;
+    }
 
     @Override
     public void onCreate() {

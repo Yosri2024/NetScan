@@ -10,7 +10,9 @@ import com.example.netscan.data.db.AppDatabase;
 import com.example.netscan.data.db.KnownDeviceEntity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -48,6 +50,25 @@ public class KnownDeviceRepository {
             return new MutableLiveData<>(new ArrayList<KnownDeviceEntity>());
         }
         return db.knownDeviceDao().observeAll();
+    }
+
+    // IP des appareils reconnus. BLOQUANT (lecture disque) : hors thread UI.
+    public Set<String> getKnownIpsBlocking() {
+        Set<String> ips = new HashSet<>();
+        if (db == null) {
+            return ips;
+        }
+        try {
+            List<KnownDeviceEntity> devices = db.knownDeviceDao().allSync();
+            if (devices != null) {
+                for (KnownDeviceEntity device : devices) {
+                    ips.add(device.ip);
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Lecture des appareils reconnus impossible.", e);
+        }
+        return ips;
     }
 
     public void markKnown(final String ip, final String label) {

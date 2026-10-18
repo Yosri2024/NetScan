@@ -49,4 +49,15 @@
     <color name="divider">#D6D9DC</color>
     <color name="ripple">#1F7C4F33</color>
     <color name="shadow">#00000020</color>
+
+    <!-- Familles d'OS (pastilles) : fond + texte, contraste AA. Windows = bleu
+         (secondary), Apple = violet (tertiary), Android = vert (primary). -->
+    <color name="os_amber_bg">#FFE8C2</color>
+    <color name="os_amber_fg">#4A2C00</color>
+    <color name="os_teal_bg">#CDEFEA</color>
+    <color name="os_teal_fg">#003731</color>
+    <color name="os_rose_bg">#FFD9E2</color>
+    <color name="os_rose_fg">#5C0A24</color>
+    <color name="os_slate_bg">#DDE3EA</color>
+    <color name="os_slate_fg">#1E2A38</color>
 </resources>

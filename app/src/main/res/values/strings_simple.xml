@@ -28,4 +28,7 @@
     <string name="simple_advice_warning_description">Les appareils marqués en orange nécessitent votre attention</string>
     <string name="simple_advice_danger">Action recommandée</string>
     <string name="simple_advice_danger_description">Des anomalies ont été détectées sur votre réseau</string>
+    <string name="simple_device_os_format">Système : %1$s</string>
+    <string name="simple_device_os_unknown">Système : inconnu</string>
+    <string name="simple_device_os_hint">Estimation indicative (nom, services, ports) — sans root, elle peut se tromper.</string>
 </resources>

@@ -40,4 +40,8 @@
     <!-- Status indicators -->
     <dimen name="status_dot_size">12dp</dimen>
     <dimen name="status_dot_size_large">16dp</dimen>
+
+    <!-- Pastilles d'OS et icônes d'appareil -->
+    <dimen name="chip_corner_radius">12dp</dimen>
+    <dimen name="device_icon_container">44dp</dimen>
 </resources>

@@ -20,6 +20,8 @@ public class HostEntity {
     public String openPortsCsv;
     public String banner;
     public String serviceName;
+    // OS estimé (« WINDOWS|HIGH|0 », voir OsInfo.encode) ; null pour les anciens scans.
+    public String osCode;
 
     public HostEntity(long scanId, String ip, String hostname, long latencyMs,
                       String openPortsCsv, String banner, String serviceName) {

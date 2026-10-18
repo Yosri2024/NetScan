@@ -1,14 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Fichier : res/layout/expert_activity_scan.xml -->
-<!-- Rôle : écran de scan Expert. Champs techniques + liste dense + barre basse. -->
+<!-- Rôle : écran de scan Expert (refonte). Trois cartes (Réseau,
+     Configuration, Progression), la liste des appareils, puis une barre
+     d'action FIXE en bas : « Démarrer » OU « Arrêter », jamais les deux.
+     Plus de boutons morts (Annuler caché), de doublons Historique/Réglages
+     (déjà dans la barre du bas) ni de liste de ports en Spinner. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorBackground"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <ScrollView
+    <!-- En-tête : titre + pastille de mode -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/screen_padding"
+        android:paddingTop="@dimen/screen_padding_small"
+        android:paddingEnd="@dimen/screen_padding"
+        android:paddingBottom="@dimen/screen_padding_small">
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/expert_title"
+            android:textAppearance="@style/TextAppearance.NetScan.TitleLarge"
+            android:textColor="?attr/colorOnSurface" />
+
+        <TextView
+            android:id="@+id/pastille_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/screen_padding_small"
+            android:background="@drawable/bg_mode_chip"
+            android:contentDescription="@string/mode_switch_description"
+            android:gravity="center"
+            android:minHeight="@dimen/touch_target_min"
+            android:text="@string/mode_expert_badge"
+            android:textAppearance="@style/TextAppearance.NetScan.LabelMedium"
+            android:textColor="?attr/colorOnPrimaryContainer" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -20,290 +59,346 @@
             android:orientation="vertical"
             android:padding="@dimen/screen_padding">
 
-            <!-- ACCUEIL du mode Expert : pas de bouton retour (racine), mais la
-                 pastille reste visible pour pouvoir revenir au mode utilisateur. -->
-            <LinearLayout
+            <!-- Carte Réseau -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.NetScan.Card"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="@dimen/screen_padding_large">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/expert_title"
-                    android:textAppearance="@style/TextAppearance.NetScan.Headline4"
-                    android:textColor="?attr/colorOnSurface" />
-
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:id="@+id/pastille_mode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/touch_target_min"
-                    android:background="@drawable/bg_mode_chip"
-                    android:clickable="true"
-                    android:contentDescription="@string/mode_switch_description"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:minWidth="@dimen/touch_target_min"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:text="@string/mode_expert_badge"
-                    android:textAppearance="@style/TextAppearance.NetScan.LabelMedium"
-                    android:textColor="?attr/colorOnPrimaryContainer" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/text_wifi"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/screen_padding"
-                android:fontFamily="monospace"
-                android:text="@string/expert_network_disconnected"
-                android:textAppearance="@style/TextAppearance.NetScan.BodyMedium"
-                android:textColor="?attr/colorOnSurfaceVariant" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/screen_padding"
-                android:hint="@string/expert_cidr_label">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_cidr"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="monospace"
-                    android:hint="@string/expert_cidr_hint"
-                    android:inputType="text"
-                    android:singleLine="true"
-                    android:imeOptions="actionNext" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:orientation="vertical"
+                    android:padding="@dimen/screen_padding">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layout_custom_ports"
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/expert_section_network"
+                        android:textAppearance="@style/TextAppearance.NetScan.TitleMedium"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <TextView
+                        android:id="@+id/text_wifi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/screen_padding_xs"
+                        android:fontFamily="monospace"
+                        android:text="@string/expert_network_disconnected"
+                        android:textAppearance="@style/TextAppearance.NetScan.BodySmall"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Carte Configuration -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.NetScan.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/screen_padding"
-                android:hint="@string/expert_custom_hint"
+                android:layout_marginTop="@dimen/screen_padding">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/screen_padding">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/expert_section_config"
+                        android:textAppearance="@style/TextAppearance.NetScan.TitleMedium"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <!-- Plage CIDR + icône « Détecter » intégrée au champ -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_cidr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/screen_padding_small"
+                        android:hint="@string/expert_cidr_label"
+                        app:endIconContentDescription="@string/expert_detect_description"
+                        app:endIconDrawable="@drawable/ic_detect"
+                        app:endIconMode="custom">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_cidr"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="monospace"
+                            android:imeOptions="actionNext"
+                            android:importantForAutofill="no"
+                            android:inputType="text"
+                            android:singleLine="true" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Ports -->
+                    <TextView
+                        android:id="@+id/expert_ports_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/expert_ports_label"
+                        android:textAppearance="@style/TextAppearance.NetScan.BodyMedium"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chip_group_ports"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/screen_padding_xs"
+                        app:selectionRequired="true"
+                        app:singleSelection="true">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_ports_common"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:text="@string/expert_preset_common" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_ports_all"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/expert_preset_all" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_ports_custom"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/expert_preset_custom" />
+                    </com.google.android.material.chip.ChipGroup>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_custom_ports"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/screen_padding_small"
+                        android:hint="@string/expert_custom_ports_label"
+                        android:visibility="gone">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_custom_ports"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/expert_custom_hint_description"
+                            android:fontFamily="monospace"
+                            android:imeOptions="actionNext"
+                            android:importantForAutofill="no"
+                            android:inputType="text"
+                            android:singleLine="true" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Timeout + threads côte à côte -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/screen_padding_small"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/layout_timeout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/screen_padding_small"
+                            android:layout_weight="1"
+                            android:hint="@string/expert_timeout_label"
+                            app:suffixText="ms">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/edit_timeout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@string/expert_timeout_description"
+                                android:imeOptions="actionNext"
+                                android:importantForAutofill="no"
+                                android:inputType="number"
+                                android:singleLine="true" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/layout_threads"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/screen_padding_small"
+                            android:layout_weight="1"
+                            android:hint="@string/expert_threads_label">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/edit_threads"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@string/expert_threads_description"
+                                android:imeOptions="actionDone"
+                                android:importantForAutofill="no"
+                                android:inputType="number"
+                                android:singleLine="true" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <!-- Identification de l'OS -->
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/switch_os"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/screen_padding_small"
+                        android:checked="true"
+                        android:minHeight="@dimen/touch_target_min"
+                        android:text="@string/expert_os_label"
+                        android:textAppearance="@style/TextAppearance.NetScan.BodyLarge"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/expert_os_helper"
+                        android:textAppearance="@style/TextAppearance.NetScan.BodySmall"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Progression : visible pendant le scan -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_progress"
+                style="@style/Widget.NetScan.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/screen_padding"
                 android:visibility="gone">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_custom_ports"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="monospace"
-                    android:hint="@string/expert_custom_hint"
-                    android:inputType="text"
-                    android:singleLine="true" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:orientation="vertical"
+                    android:padding="@dimen/screen_padding">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="@dimen/screen_padding">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button_detect"
-                    style="@style/Widget.NetScan.Button.Outlined"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/button_height_small"
-                    android:layout_weight="1"
-                    android:text="@string/expert_detect"
-                    android:textAllCaps="false"
-                    android:elevation="2dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button_cancel"
-                    style="@style/Widget.NetScan.Button.Outlined"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/button_height_small"
-                    android:layout_weight="1"
-                    android:text="@string/expert_cancel"
-                    android:enabled="false"
-                    android:visibility="gone"
-                    android:textAllCaps="false"
-                    android:elevation="2dp" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/expert_ports_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/screen_padding"
-                android:text="@string/expert_ports_label"
-                android:textAppearance="@style/TextAppearance.NetScan.LabelMedium"
-                android:textColor="?attr/colorOnSurface" />
-
-            <Spinner
-                android:id="@+id/spinner_ports"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/touch_target_min"
-                android:layout_marginBottom="@dimen/screen_padding"
-                android:background="?attr/selectableItemBackgroundBorderless" />
-
-            <!-- Options de timeout et threads -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="@dimen/screen_padding">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/expert_timeout_label">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_timeout"
+                    <TextView
+                        android:id="@+id/text_phase"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:hint="@string/expert_timeout_hint"
-                        android:inputType="number"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:text="@string/expert_status_scanning"
+                        android:textAppearance="@style/TextAppearance.NetScan.TitleMedium"
+                        android:textColor="?attr/colorOnSurface" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/expert_threads_label"
-                    android:layout_marginStart="@dimen/screen_padding_small">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_threads"
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/progress_bar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/screen_padding_small"
+                        android:indeterminate="true"
+                        app:trackCornerRadius="4dp" />
+
+                    <TextView
+                        android:id="@+id/text_progress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/screen_padding_xs"
                         android:fontFamily="monospace"
-                        android:hint="@string/expert_threads_hint"
-                        android:inputType="number"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
+                        android:textAppearance="@style/TextAppearance.NetScan.BodySmall"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Boutons d'action -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="@dimen/screen_padding">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button_start"
-                    style="@style/Widget.NetScan.Button.Filled"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/button_height_main"
-                    android:layout_weight="1"
-                    android:text="@string/expert_start"
-                    android:textAllCaps="false"
-                    android:elevation="4dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button_cancel_secondary"
-                    style="@style/Widget.NetScan.Button.Outlined"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/button_height_main"
-                    android:layout_weight="1"
-                    android:text="@string/expert_cancel"
-                    android:enabled="false"
-                    android:textAllCaps="false"
-                    android:elevation="2dp" />
-            </LinearLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_history"
-                style="@style/Widget.NetScan.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/button_height_small"
-                android:layout_marginTop="@dimen/screen_padding_small"
-                android:text="@string/expert_history_open"
-                android:textAllCaps="false"
-                android:paddingStart="@dimen/screen_padding_large"
-                android:paddingEnd="@dimen/screen_padding_large"
-                android:elevation="2dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_open_settings"
-                style="@style/Widget.NetScan.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/button_height_small"
-                android:layout_marginTop="@dimen/screen_padding_small"
-                android:text="@string/expert_open_settings"
-                android:textAllCaps="false"
-                android:paddingStart="@dimen/screen_padding_large"
-                android:paddingEnd="@dimen/screen_padding_large"
-                android:elevation="2dp"
-                android:visibility="gone" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_settings"
-                style="@style/Widget.NetScan.Button.Outlined"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/button_height_small"
-                android:layout_marginTop="@dimen/screen_padding_small"
-                android:text="@string/expert_settings_open"
-                android:textAllCaps="false"
-                android:visibility="gone" />
-
-            <!-- Barre de progression -->
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                style="@style/Widget.NetScan.ProgressBar.Horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:layout_marginTop="@dimen/screen_padding"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/text_progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/screen_padding_small"
-                android:fontFamily="monospace"
-                android:textAppearance="@style/TextAppearance.NetScan.BodySmall"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:visibility="gone" />
-
+            <!-- Message d'état (erreur, permission refusée) + accès aux réglages système -->
             <TextView
                 android:id="@+id/text_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/screen_padding_small"
+                android:layout_marginTop="@dimen/screen_padding"
                 android:textAppearance="@style/TextAppearance.NetScan.BodyMedium"
                 android:textColor="?attr/colorOnSurface"
                 android:visibility="gone" />
 
-            <!-- Liste dense : hauteur limitée pour rester dans le défilement global. -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_settings"
+                style="@style/Widget.NetScan.Button.Tonal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/screen_padding_small"
+                android:text="@string/expert_open_settings"
+                android:visibility="gone" />
+
+            <!-- Résultats -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/screen_padding"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/text_results_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/expert_section_results"
+                    android:textAppearance="@style/TextAppearance.NetScan.TitleMedium"
+                    android:textColor="?attr/colorOnSurface" />
+
+                <TextView
+                    android:id="@+id/text_results_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.NetScan.LabelMedium"
+                    android:textColor="?attr/colorPrimary" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/text_results_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/screen_padding_small"
+                android:padding="@dimen/screen_padding"
+                android:gravity="center"
+                android:text="@string/expert_results_empty"
+                android:textAppearance="@style/TextAppearance.NetScan.BodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_hosts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/screen_padding"
-                android:minHeight="120dp"
+                android:layout_marginTop="@dimen/screen_padding_small"
                 android:nestedScrollingEnabled="false"
-                android:background="?attr/colorSurface"
-                android:clipToPadding="false" />
-
+                android:overScrollMode="never" />
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
-    <!-- Barre basse, comme en mode Simple -->
+    <!-- Barre d'action fixe : un seul bouton visible à la fois -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface"
+        android:paddingStart="@dimen/screen_padding"
+        android:paddingTop="@dimen/screen_padding_small"
+        android:paddingEnd="@dimen/screen_padding"
+        android:paddingBottom="@dimen/screen_padding_small">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_start"
+            style="@style/Widget.NetScan.Button.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/expert_start_scan"
+            app:icon="@drawable/ic_detect" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_cancel"
+            style="@style/Widget.NetScan.Button.Destructive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/button_height_main"
+            android:text="@string/expert_stop_scan"
+            android:visibility="gone"
+            app:icon="@drawable/ic_stop" />
+    </FrameLayout>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorSurface"
-        app:menu="@menu/simple_bottom_nav"
-        app:itemIconTint="@color/nav_item_colors"
-        app:itemTextColor="@color/nav_item_colors"
-        app:labelVisibilityMode="labeled" />
-
+        app:menu="@menu/simple_bottom_nav" />
 </LinearLayout>

@@ -1,57 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Fichier : res/layout/simple_item_device.xml -->
-<!-- Rôle : ligne d'appareil Simple (Étape 3). Point couleur + nom + sous-texte. -->
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Rôle : une ligne de la liste Simple (refonte). Icône d'appareil (selon
+     l'OS estimé), nom clair, statut (point de couleur + TEXTE : la couleur
+     n'est jamais seule) et pastille du système d'exploitation. -->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.NetScan.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/screen_padding_small"
-    app:cardBackgroundColor="?attr/colorSurface"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="1dp"
-    app:cardUseCompatPadding="true">
+    android:layout_marginStart="@dimen/screen_padding"
+    android:layout_marginTop="@dimen/screen_padding_xs"
+    android:layout_marginEnd="@dimen/screen_padding"
+    android:layout_marginBottom="@dimen/screen_padding_xs"
+    android:clickable="true"
+    android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/screen_padding"
         android:gravity="center_vertical"
+        android:minHeight="72dp"
         android:orientation="horizontal"
-        android:minHeight="64dp">
+        android:padding="12dp">
 
-        <!-- Point statut : vert/Orange, accompagnant le texte. -->
-        <View
-            android:id="@+id/dot_status"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:background="@drawable/bg_status_dot"
-            android:layout_marginEnd="@dimen/screen_padding" />
+        <FrameLayout
+            android:id="@+id/icon_container"
+            android:layout_width="@dimen/device_icon_container"
+            android:layout_height="@dimen/device_icon_container">
+
+            <ImageView
+                android:id="@+id/image_os"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_os_unknown" />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/text_device_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.NetScan.BodyLarge"
-                android:textColor="?attr/colorOnSurface"
-                android:maxLines="1"
-                android:ellipsize="end" />
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textAppearance="@style/TextAppearance.NetScan.TitleMedium"
+                android:textColor="?attr/colorOnSurface" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/dot_status"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/bg_status_dot"
+                    android:importantForAccessibility="no" />
+
+                <TextView
+                    android:id="@+id/text_device_sub"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textAppearance="@style/TextAppearance.NetScan.BodySmall"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/text_device_sub"
+                android:id="@+id/chip_os"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/screen_padding_xs"
-                android:textAppearance="@style/TextAppearance.NetScan.BodyMedium"
-                android:textColor="?attr/colorOnSurfaceVariant"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
                 android:maxLines="1"
-                android:ellipsize="end" />
+                android:paddingStart="10dp"
+                android:paddingTop="3dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="3dp"
+                android:textAppearance="@style/TextAppearance.Material3.LabelMedium" />
         </LinearLayout>
     </LinearLayout>
-
 </com.google.android.material.card.MaterialCardView>

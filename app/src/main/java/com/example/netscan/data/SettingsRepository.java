@@ -237,6 +237,39 @@ public class SettingsRepository {
         });
     }
 
+    // Texte libre stocké CHIFFRÉ (config Expert...). Lecture : cache ou défaut.
+    public String getString(String key, String defaultValue) {
+        String encrypted = cache.get(key);
+        if (encrypted == null || crypto == null) {
+            return defaultValue;
+        }
+        try {
+            return crypto.decryptFromBase64(encrypted);
+        } catch (Exception e) {
+            Log.e(TAG, "Valeur illisible : " + key, e);
+            return defaultValue;
+        }
+    }
+
+    public void putString(final String key, String value) {
+        final String encrypted = encryptNow(value == null ? "" : value);
+        if (encrypted == null) {
+            return;
+        }
+        cache.put(key, encrypted);
+        final Preferences.Key<String> prefKey = PreferencesKeys.stringKey(key);
+        writer.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    writeBlocking(prefKey, encrypted);
+                } catch (Exception e) {
+                    Log.e(TAG, "Sauvegarde impossible : " + key, e);
+                }
+            }
+        });
+    }
+
     // Exécute r sur le thread d'écriture, DONC après le préchargement
     // (file unique : ordre garanti). Sert au routage du premier lancement.
     public void awaitReady(Runnable r) {

@@ -21,6 +21,22 @@ public class ScanConfig {
     // Mode Simple : découverte des appareils sans scan de ports (rapide).
     // Mode Expert : true (scan complet). Modifiable, défaut true.
     private boolean portScanEnabled = true;
+    // Identification du système (ping TTL + ports signatures) : activée par
+    // défaut, désactivable en Expert pour un scan plus discret et plus court.
+    private boolean osDetectionEnabled = true;
+
+    // Instantané : le scan en cours ne doit pas suivre les modifications de l'écran.
+    public ScanConfig copy() {
+        ScanConfig copy = new ScanConfig();
+        copy.cidr = cidr;
+        copy.portPreset = portPreset;
+        copy.customPortsText = customPortsText;
+        copy.timeoutMs = timeoutMs;
+        copy.threadCount = threadCount;
+        copy.portScanEnabled = portScanEnabled;
+        copy.osDetectionEnabled = osDetectionEnabled;
+        return copy;
+    }
 
     public String getCidr() {
         return cidr;
@@ -68,6 +84,14 @@ public class ScanConfig {
 
     public void setPortScanEnabled(boolean portScanEnabled) {
         this.portScanEnabled = portScanEnabled;
+    }
+
+    public boolean isOsDetectionEnabled() {
+        return osDetectionEnabled;
+    }
+
+    public void setOsDetectionEnabled(boolean osDetectionEnabled) {
+        this.osDetectionEnabled = osDetectionEnabled;
     }
 
     // Liste des ports à scanner selon le préréglage choisi.

@@ -1,23 +1,26 @@
 package com.example.netscan.utils;
 
 import com.example.netscan.data.model.Host;
-
-import java.util.Locale;
+import com.example.netscan.data.model.OsInfo;
 
 // Fichier : utils/DeviceNamer.java
 // Rôle : nom clair pour chaque appareil Simple (Étape 3).
-// Heuristiques sur IP, nom d'hôte et service mDNS : le résultat
-// reste approximatif (rappelé à l'utilisateur).
+// Le nom découle maintenant de l'identification du système (OsGuesser) :
+// mots entiers et score, au lieu de chercher « tv » ou « phone » au milieu
+// de n'importe quel nom. Une estimation faible n'est jamais présentée
+// comme un fait : on reste sur « Appareil inconnu ».
 public final class DeviceNamer {
+
+    public static final String UNKNOWN_NAME = "Appareil inconnu";
 
     private DeviceNamer() {
     }
 
-    // "Votre box Internet", "Votre téléphone", "Votre TV connectée",
-    // "Votre imprimante", sinon "Appareil inconnu".
+    // "Votre box Internet", "Votre téléphone" (cet appareil), "Votre TV connectée",
+    // "Votre imprimante", "Un ordinateur Windows"... sinon "Appareil inconnu".
     public static String nameFor(Host host, String ownIp, String gatewayIp) {
         if (host == null) {
-            return "Appareil inconnu";
+            return UNKNOWN_NAME;
         }
         if (host.getIpAddress().equals(ownIp)) {
             return "Votre téléphone";
@@ -25,24 +28,34 @@ public final class DeviceNamer {
         if (host.getIpAddress().equals(gatewayIp)) {
             return "Votre box Internet";
         }
-        String haystack = ((host.getHostname() == null ? "" : host.getHostname()) + " "
-                + (host.getServiceName() == null ? "" : host.getServiceName()))
-                .toLowerCase(Locale.FRENCH);
-        if (haystack.contains("tv") || haystack.contains("television")
-                || haystack.contains("shield") || haystack.contains("chromecast")) {
-            return "Votre TV connectée";
+        OsInfo os = OsGuesser.analyze(host);
+        if (!os.isKnown() || os.confidence() == OsInfo.Confidence.LOW) {
+            return UNKNOWN_NAME;
         }
-        if (haystack.contains("print") || haystack.contains("imprim")) {
-            return "Votre imprimante";
+        switch (os.family()) {
+            case TV:
+                return "Votre TV connectée";
+            case PRINTER:
+                return "Votre imprimante";
+            case WINDOWS:
+                return "Un ordinateur Windows";
+            case APPLE:
+                return os.isMobile() ? "Un iPhone ou iPad" : "Un appareil Apple";
+            case ANDROID:
+                return "Un téléphone Android";
+            case LINUX:
+                return "Un ordinateur Linux";
+            case NETWORK:
+                return "Un équipement réseau";
+            case IOT:
+                return "Un objet connecté";
+            default:
+                return UNKNOWN_NAME;
         }
-        if (haystack.contains("phone") || haystack.contains("iphone")
-                || haystack.contains("android") || haystack.contains("galaxy")) {
-            return "Un téléphone";
-        }
-        return "Appareil inconnu";
     }
 
-    // Sous-texte court : qualité de connexion, "Cet appareil", "À vérifier".
+    // Sous-texte court : « Cet appareil », « À vérifier », ou la qualité de
+    // connexion. Le système d'exploitation a désormais sa propre pastille.
     public static String subtextFor(Host host, boolean recognized, String ownIp) {
         if (host.getIpAddress().equals(ownIp)) {
             return "Cet appareil";

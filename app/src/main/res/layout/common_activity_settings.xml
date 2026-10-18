@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Fichier : res/layout/common_activity_settings.xml -->
-<!-- Rôle : écran Réglages (Étape 5). Retour, mode, thème (mode nuit),
-     historique, légal, à-propos. -->
+<!-- Rôle : écran Réglages (refonte). Retour + titre, puis trois cartes :
+     mode, thème (mode nuit), données et mentions légales. Les sections
+     étaient collées sans aucun espace ; chaque groupe a maintenant sa carte. -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorBackground"
     android:fitsSystemWindows="true">
 
     <LinearLayout
@@ -26,90 +29,150 @@
                 android:layout_height="@dimen/touch_target_min" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/screen_padding"
+                android:layout_marginStart="@dimen/screen_padding_small"
+                android:layout_weight="1"
                 android:text="@string/settings_title"
-                android:textAppearance="?attr/textAppearanceHeadlineMedium" />
+                android:textAppearance="@style/TextAppearance.NetScan.Headline3"
+                android:textColor="?attr/colorOnSurface" />
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- Mode -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.NetScan.Card"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/settings_mode_label"
-            android:textAppearance="?attr/textAppearanceTitleMedium" />
+            android:layout_marginTop="@dimen/screen_padding">
 
-        <RadioGroup
-            android:id="@+id/radio_mode"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/screen_padding">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_mode_label"
+                    android:textAppearance="@style/TextAppearance.NetScan.TitleMedium"
+                    android:textColor="?attr/colorOnSurface" />
+
+                <RadioGroup
+                    android:id="@+id/radio_mode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/screen_padding_xs">
+
+                    <RadioButton
+                        android:id="@+id/radio_simple"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/touch_target_min"
+                        android:text="@string/onboarding_mode_simple"
+                        android:textAppearance="@style/TextAppearance.NetScan.BodyLarge" />
+
+                    <RadioButton
+                        android:id="@+id/radio_expert"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/touch_target_min"
+                        android:text="@string/onboarding_mode_expert"
+                        android:textAppearance="@style/TextAppearance.NetScan.BodyLarge" />
+                </RadioGroup>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Thème -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.NetScan.Card"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <RadioButton
-                android:id="@+id/radio_simple"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/touch_target_min"
-                android:text="@string/onboarding_mode_simple"
-                android:textAppearance="?attr/textAppearanceBodyLarge" />
-
-            <RadioButton
-                android:id="@+id/radio_expert"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/touch_target_min"
-                android:text="@string/onboarding_mode_expert"
-                android:textAppearance="?attr/textAppearanceBodyLarge" />
-        </RadioGroup>
-
-        <TextView
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/settings_theme_label"
-            android:textAppearance="?attr/textAppearanceTitleMedium" />
+            android:layout_marginTop="@dimen/screen_padding">
 
-        <RadioGroup
-            android:id="@+id/radio_theme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <RadioButton
-                android:id="@+id/radio_theme_system"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/touch_target_min"
-                android:text="@string/settings_theme_system"
-                android:textAppearance="?attr/textAppearanceBodyLarge" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/screen_padding">
 
-            <RadioButton
-                android:id="@+id/radio_theme_light"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/touch_target_min"
-                android:text="@string/settings_theme_light"
-                android:textAppearance="?attr/textAppearanceBodyLarge" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_theme_label"
+                    android:textAppearance="@style/TextAppearance.NetScan.TitleMedium"
+                    android:textColor="?attr/colorOnSurface" />
 
-            <RadioButton
-                android:id="@+id/radio_theme_dark"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/touch_target_min"
-                android:text="@string/settings_theme_dark"
-                android:textAppearance="?attr/textAppearanceBodyLarge" />
-        </RadioGroup>
+                <RadioGroup
+                    android:id="@+id/radio_theme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/screen_padding_xs">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_clear_history"
-            style="@style/Widget.NetScan.Button.Destructive"
+                    <RadioButton
+                        android:id="@+id/radio_theme_system"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/touch_target_min"
+                        android:text="@string/settings_theme_system"
+                        android:textAppearance="@style/TextAppearance.NetScan.BodyLarge" />
+
+                    <RadioButton
+                        android:id="@+id/radio_theme_light"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/touch_target_min"
+                        android:text="@string/settings_theme_light"
+                        android:textAppearance="@style/TextAppearance.NetScan.BodyLarge" />
+
+                    <RadioButton
+                        android:id="@+id/radio_theme_dark"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/touch_target_min"
+                        android:text="@string/settings_theme_dark"
+                        android:textAppearance="@style/TextAppearance.NetScan.BodyLarge" />
+                </RadioGroup>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Données et mentions légales -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.NetScan.Card"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/touch_target_min"
-            android:text="@string/simple_history_clear" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/screen_padding">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_legal"
-            style="@style/Widget.NetScan.Button.Outlined"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/touch_target_min"
-            android:text="@string/settings_legal" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/screen_padding">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_legal"
+                    style="@style/Widget.NetScan.Button.Outlined"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_legal" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_clear_history"
+                    style="@style/Widget.NetScan.Button.Destructive"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/screen_padding_small"
+                    android:text="@string/simple_history_clear" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/text_about"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceBodyMedium" />
+            android:layout_marginTop="@dimen/screen_padding"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.NetScan.BodySmall"
+            android:textColor="?attr/colorOnSurfaceVariant" />
     </LinearLayout>
 </ScrollView>

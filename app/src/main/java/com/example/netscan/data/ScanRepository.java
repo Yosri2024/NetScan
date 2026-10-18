@@ -11,7 +11,9 @@ import com.example.netscan.data.db.AppDatabase;
 import com.example.netscan.data.db.HostEntity;
 import com.example.netscan.data.db.ScanEntity;
 import com.example.netscan.data.model.Host;
+import com.example.netscan.data.model.OsInfo;
 import com.example.netscan.data.model.PortResult;
+import com.example.netscan.utils.OsGuesser;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -101,9 +103,12 @@ public class ScanRepository {
                             safe.size(), recognized, openTotal, durationMs));
                     List<HostEntity> entities = new ArrayList<>(safe.size());
                     for (Host host : safe) {
-                        entities.add(new HostEntity(id, host.getIpAddress(), host.getHostname(),
-                                host.getLatencyMs(), joinPorts(host.getOpenPorts()),
-                                firstBanner(host.getOpenPorts()), host.getServiceName()));
+                        HostEntity entity = new HostEntity(id, host.getIpAddress(),
+                                host.getHostname(), host.getLatencyMs(),
+                                joinPorts(host.getOpenPorts()),
+                                firstBanner(host.getOpenPorts()), host.getServiceName());
+                        entity.osCode = OsGuesser.analyze(host).encode();
+                        entities.add(entity);
                     }
                     db.scanDao().insertHosts(entities);
                     if (callback != null) {
@@ -214,6 +219,8 @@ public class ScanRepository {
     public static Host toHost(HostEntity entity) {
         Host host = new Host(entity.ip, entity.hostname, true, entity.latencyMs);
         host.setServiceName(entity.serviceName);
+        // Anciens scans : osCode null -> décode donne null -> OS recalculé à l'affichage.
+        host.setOs(OsInfo.decode(entity.osCode));
         if (entity.openPortsCsv != null && !entity.openPortsCsv.isEmpty()) {
             boolean first = true;
             for (String part : entity.openPortsCsv.split(",")) {

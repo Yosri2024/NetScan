@@ -2,6 +2,7 @@ package com.example.netscan.ui.common;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.TextView;
 
@@ -15,9 +16,14 @@ import com.example.netscan.ui.simple.SimpleScanActivity;
 // Rôle : pastille "Mode simple / Mode expert" (Étape 3).
 // Bascule instantanée : le choix est mémorisé puis l'application repart
 // directement sur l'ACCUEIL du mode choisi (pile d'écrans effacée).
-// Le dernier scan et les appareils marqués survivent via NetScanApp ; un
-// scan EN COURS est annulé (son activité est détruite).
+// Le dernier scan, les appareils marqués ET le scan en cours survivent à la
+// bascule (ScanViewModel est rattaché à l'application, pas à l'écran).
 public final class ModeSwitchHelper {
+
+    // Un double-tap sur la pastille ne doit pas basculer deux fois (Simple ->
+    // Expert -> Simple) : on ignore les bascules rapprochées.
+    private static final long SWITCH_DEBOUNCE_MS = 800;
+    private static long lastSwitchMs;
 
     private ModeSwitchHelper() {
     }
@@ -35,6 +41,11 @@ public final class ModeSwitchHelper {
     }
 
     public static void switchMode(Activity activity) {
+        long now = SystemClock.elapsedRealtime();
+        if (now - lastSwitchMs < SWITCH_DEBOUNCE_MS) {
+            return;
+        }
+        lastSwitchMs = now;
         AppMode next = ModeManager.isSimple(activity) ? AppMode.EXPERT : AppMode.SIMPLE;
         goToModeHome(activity, next);
     }
@@ -43,7 +54,12 @@ public final class ModeSwitchHelper {
     // par les pages d'accueil elles-mêmes : si le mode a été changé depuis les
     // réglages, revenir à l'accueil doit afficher le BON écran, pas l'ancien.
     public static void goToModeHome(Activity activity, AppMode mode) {
-        if (mode != null) {
+        if (mode == null) {
+            return;
+        }
+        // On n'écrit que si le mode change : avant, chaque retour sur l'accueil
+        // (onResume) rechiffrait et réécrivait le même mode sur le disque.
+        if (ModeManager.getMode(activity) != mode) {
             ModeManager.setMode(activity, mode);
         }
         Class<?> target = (mode == AppMode.EXPERT)

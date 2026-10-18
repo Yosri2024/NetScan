@@ -5,10 +5,14 @@ import android.content.Context;
 import com.example.netscan.data.model.Host;
 import com.example.netscan.data.model.PortResult;
 import com.example.netscan.data.model.ScanConfig;
+import com.example.netscan.utils.OsGuesser;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
@@ -20,16 +24,36 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 // Fichier : network/NetworkScanner.java
 // Rôle : orchestre le scan (Étape 2). BLOQUANT : à appeler hors thread UI.
-// Phase 1 : balayage des hôtes. Phase 2 : ports + bannières sur les
-// hôtes joignables. Annulable via cancel().
+// Phase 1 : balayage des hôtes joignables.
+// Phase 2 : identification du système (TTL + ports signatures + bannières),
+//           en modes Simple ET Expert.
+// Phase 3 : scan de ports + bannières (Expert seulement).
+// Annulable via cancel().
 public class NetworkScanner {
 
+    // Étape en cours, pour l'affichage (« Identification des systèmes… »).
+    public enum Phase {
+        DISCOVERY,
+        OS_DETECTION,
+        PORTS
+    }
+
     public interface Callback {
+        // La progression est propre à chaque phase (done/total repart de 0).
         void onProgress(int done, int total);
         void onHostFound(Host host);
         void onFinished(List<Host> reachableHosts);
         void onError(String message);
+
+        // Appelé hors thread UI au début de chaque phase.
+        default void onPhase(Phase phase) {
+        }
     }
+
+    // Timeout court pour la sonde OS : un port ouvert répond vite, un port
+    // fermé coûte au plus ce délai.
+    private static final int OS_PROBE_TIMEOUT_MS = 400;
+    private static final int OS_POOL_SIZE = 10;
 
     private final Context appContext;
     private final AtomicBoolean cancelled = new AtomicBoolean(false);
@@ -47,13 +71,19 @@ public class NetworkScanner {
         }
     }
 
+    // Un NetworkScanner sert pour UN scan : le drapeau d'annulation n'est donc
+    // pas remis à zéro ici, sinon un « Annuler » arrivé juste avant le début
+    // du scan serait perdu.
     public void scan(ScanConfig config, Callback callback) {
-        cancelled.set(false);
         List<String> targets;
-        List<Integer> ports;
+        // Les ports ne sont évalués que si le scan de ports est actif : une
+        // liste personnalisée invalide ne doit pas bloquer un scan Simple.
+        List<Integer> ports = Collections.emptyList();
         try {
             targets = SubnetCalculator.listHosts(config.getCidr());
-            ports = config.getPortsToScan();
+            if (config.isPortScanEnabled()) {
+                ports = config.getPortsToScan();
+            }
         } catch (IllegalArgumentException e) {
             callback.onError(e.getMessage());
             return;
@@ -64,35 +94,52 @@ public class NetworkScanner {
         nsd.start(null);
 
         // Phase 1 : découverte des hôtes.
+        callback.onPhase(Phase.DISCOVERY);
         List<Host> reachable = discoverHosts(targets, config, callback);
-        if (cancelled.get()) {
-            nsd.stop();
-            callback.onFinished(reachable);
-            return;
-        }
 
-        // Phase 2 : ports + bannières (sautée en mode Simple : découverte seule).
-        if (config.isPortScanEnabled()) {
-            scanPorts(reachable, ports, config, callback);
-        } else {
-            for (Host host : reachable) {
-                if (cancelled.get()) {
-                    break;
-                }
-                callback.onHostFound(host);
+        if (!cancelled.get()) {
+            mergeServices(nsd, reachable);
+
+            // Phase 2 : identification du système (Simple et Expert).
+            if (config.isOsDetectionEnabled()) {
+                callback.onPhase(Phase.OS_DETECTION);
+                Set<Integer> alreadyScanned = new HashSet<>(ports);
+                detectOs(reachable, alreadyScanned, callback);
             }
         }
 
-        // Fusionne les noms de services mDNS découverts.
-        Map<String, String> services = nsd.snapshot();
+        if (!cancelled.get()) {
+            // Phase 3 : ports + bannières (sautée en mode Simple).
+            if (config.isPortScanEnabled()) {
+                callback.onPhase(Phase.PORTS);
+                scanPorts(reachable, ports, config, callback);
+            } else {
+                for (Host host : reachable) {
+                    if (cancelled.get()) {
+                        break;
+                    }
+                    callback.onHostFound(host);
+                }
+            }
+        }
+
+        // Fin : derniers services mDNS, puis OS figé avec TOUS les indices.
+        mergeServices(nsd, reachable);
         nsd.stop();
         for (Host host : reachable) {
+            host.setOs(OsGuesser.compute(host));
+        }
+        callback.onFinished(reachable);
+    }
+
+    private void mergeServices(NsdDiscovery nsd, List<Host> hosts) {
+        Map<String, String> services = nsd.snapshot();
+        for (Host host : hosts) {
             String name = services.get(host.getIpAddress());
             if (name != null) {
                 host.setServiceName(name);
             }
         }
-        callback.onFinished(reachable);
     }
 
     private List<Host> discoverHosts(List<String> targets, ScanConfig config, Callback callback) {
@@ -140,6 +187,50 @@ public class NetworkScanner {
         return reachable;
     }
 
+    // Identification du système : un appareil par thread, les ports signatures
+    // et le ping se font en parallèle dans OsProber. Les ports que le scan
+    // Expert va de toute façon parcourir ne sont pas sondés deux fois.
+    private void detectOs(List<Host> reachable, final Set<Integer> alreadyScanned,
+                          final Callback callback) {
+        if (reachable.isEmpty()) {
+            return;
+        }
+        final int total = reachable.size();
+        final AtomicInteger done = new AtomicInteger(0);
+        int poolSize = Math.max(1, Math.min(OS_POOL_SIZE, total));
+        ExecutorService pool = Executors.newFixedThreadPool(poolSize);
+        executor = pool;
+        callback.onProgress(0, total);
+        try {
+            List<Future<?>> futures = new ArrayList<>(total);
+            for (final Host host : reachable) {
+                if (cancelled.get()) {
+                    break;
+                }
+                futures.add(pool.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        OsProber.enrichHost(host, OS_PROBE_TIMEOUT_MS, alreadyScanned, cancelled);
+                        callback.onProgress(done.incrementAndGet(), total);
+                    }
+                }));
+            }
+            for (Future<?> future : futures) {
+                try {
+                    future.get();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                } catch (Exception ignored) {
+                    // Une sonde en échec : l'hôte garde ses autres indices.
+                }
+            }
+        } finally {
+            pool.shutdownNow();
+            executor = null;
+        }
+    }
+
     private void scanPorts(List<Host> reachable, List<Integer> ports,
                            ScanConfig config, Callback callback) {
         if (reachable.isEmpty() || ports.isEmpty()) {
@@ -151,6 +242,7 @@ public class NetworkScanner {
         int total = reachable.size() * ports.size();
         AtomicInteger done = new AtomicInteger(0);
         int poolSize = Math.min(64, ports.size());
+        callback.onProgress(0, total);
         for (Host host : reachable) {
             if (cancelled.get()) {
                 break;
@@ -162,11 +254,15 @@ public class NetworkScanner {
                 if (cancelled.get()) {
                     break;
                 }
-                // Bannière avec un timeout plafonné (ne ralentit pas le scan).
-                port.setBanner(BannerGrabber.grabBanner(
-                        host.getIpAddress(), port.getPort(),
-                        Math.min(config.getTimeoutMs(), 1500)));
-                host.addOpenPort(port);
+                // Déjà vu (et déjà lu) lors de la phase OS : pas de seconde connexion.
+                PortResult known = host.findOpenPort(port.getPort());
+                if (known == null || known.getBanner() == null) {
+                    // Bannière avec un timeout plafonné (ne ralentit pas le scan).
+                    port.setBanner(BannerGrabber.grabBanner(
+                            host.getIpAddress(), port.getPort(),
+                            Math.min(config.getTimeoutMs(), 1500)));
+                }
+                host.mergeOpenPort(port);
             }
             callback.onProgress(done.get(), total);
             callback.onHostFound(host);

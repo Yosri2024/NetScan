@@ -2,14 +2,10 @@
 <!-- Fichier : res/layout/expert_item_scan.xml -->
 <!-- Rôle : ligne d'historique Expert (Étape 4). Stats + exports. -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/screen_padding_small"
-    app:cardBackgroundColor="?attr/colorSurface"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="1dp"
-    app:cardUseCompatPadding="true">
+    style="@style/Widget.NetScan.Card"
+    android:layout_marginBottom="@dimen/screen_padding_small">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,22 +40,20 @@
                 android:id="@+id/button_export_json"
                 style="@style/Widget.NetScan.Button.Outlined"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/touch_target_min"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="@dimen/screen_padding_small"
                 android:text="@string/expert_export_json"
-                android:textAllCaps="false"
-                android:elevation="2dp" />
+                />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_export_csv"
                 style="@style/Widget.NetScan.Button.Outlined"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/touch_target_min"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/expert_export_csv"
-                android:textAllCaps="false"
-                android:elevation="2dp" />
+                />
         </LinearLayout>
     </LinearLayout>
 

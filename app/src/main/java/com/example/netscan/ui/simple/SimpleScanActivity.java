@@ -9,29 +9,31 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.Observer;
 
 import com.example.netscan.NetScanApp;
 import com.example.netscan.R;
-import com.example.netscan.data.model.Host;
 import com.example.netscan.data.model.NetworkDetails;
-import com.example.netscan.data.model.ScanConfig;
 import com.example.netscan.databinding.SimpleActivityScanBinding;
 import com.example.netscan.network.NetworkInfoHelper;
+import com.example.netscan.network.NetworkScanner;
 import com.example.netscan.security.PermissionHelper;
+import com.example.netscan.ui.common.LegalWarningDialog;
 import com.example.netscan.ui.common.ModeSwitchHelper;
+import com.example.netscan.ui.common.ScanUi;
 import com.example.netscan.viewmodel.ScanViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 // Fichier : ui/simple/SimpleScanActivity.java
-// Rôle : Écran 1 du mode Simple (Étape 3). UN gros bouton "Scanner mon
-// réseau", état du réseau (Wi-Fi ou Ethernet), dernier scan, navigation
-// basse. Le scan Simple = découverte des appareils sans scan de ports
-// (rapide), sur n'importe quel réseau local.
+// Rôle : Écran 1 du mode Simple (refonte). UN gros bouton « Scanner mon
+// réseau », état du réseau, progression par étape, dernier scan, navigation
+// basse. Le scan Simple = découverte + identification du système, sans scan
+// de ports (rapide), sur n'importe quel réseau local.
+// L'écran ne possède AUCUN état de scan : tout vit dans le ScanViewModel
+// partagé, donc rotation, réglages et bascule de mode ne cassent plus rien.
 public class SimpleScanActivity extends AppCompatActivity {
 
     private SimpleActivityScanBinding binding;
@@ -43,10 +45,10 @@ public class SimpleScanActivity extends AppCompatActivity {
         binding = SimpleActivityScanBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Pastille "Mode simple" : touche pour basculer en Expert.
+        // Pastille « Mode simple » : touche pour basculer en Expert.
         ModeSwitchHelper.bindPastille(this, binding.pastilleMode);
 
-        viewModel = new ViewModelProvider(this).get(ScanViewModel.class);
+        viewModel = ScanViewModel.get(this);
 
         binding.buttonScan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +59,16 @@ public class SimpleScanActivity extends AppCompatActivity {
         binding.buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Retour visuel immédiat : l'arrêt effectif prend un instant.
+                binding.buttonCancel.setEnabled(false);
+                binding.textScanning.setText(R.string.scan_cancelling);
                 viewModel.cancelScan();
+            }
+        });
+        binding.buttonLastResults.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SimpleScanActivity.this, SimpleResultsActivity.class));
             }
         });
         binding.bottomNav.setOnItemSelectedListener(
@@ -68,16 +79,14 @@ public class SimpleScanActivity extends AppCompatActivity {
                         if (id == R.id.nav_scan) {
                             return true;
                         }
-                        // Historique (Étape 4) : écran dédié.
-                        if (id == R.id.nav_history) {
-                            startActivity(new Intent(SimpleScanActivity.this,
-                                    SimpleHistoryActivity.class));
-                            return false;
-                        }
-                        // Réglages (Étape 5) : écran dédié.
-                        startActivity(new Intent(SimpleScanActivity.this,
-                                com.example.netscan.ui.common.SettingsActivity.class));
-                        return false;
+                        Intent intent = new Intent(SimpleScanActivity.this,
+                                id == R.id.nav_history
+                                        ? SimpleHistoryActivity.class
+                                        : com.example.netscan.ui.common.SettingsActivity.class);
+                        // Un double-tap n'empile pas deux fois le même écran.
+                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(intent);
+                        return false; // l'onglet « Scanner » reste sélectionné
                     }
                 });
 
@@ -87,7 +96,7 @@ public class SimpleScanActivity extends AppCompatActivity {
     }
 
     private void observeViewModel() {
-        viewModel.getNetwork().observe(this, new androidx.lifecycle.Observer<NetworkDetails>() {
+        viewModel.getNetwork().observe(this, new Observer<NetworkDetails>() {
             @Override
             public void onChanged(NetworkDetails details) {
                 if (details != null && details.isUsable()) {
@@ -99,112 +108,88 @@ public class SimpleScanActivity extends AppCompatActivity {
                 }
             }
         });
-        viewModel.getScanning().observe(this, new androidx.lifecycle.Observer<Boolean>() {
+        viewModel.getScanning().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean scanning) {
                 boolean active = Boolean.TRUE.equals(scanning);
-                binding.buttonScan.setEnabled(!active);
-                binding.buttonCancel.setVisibility(active ? View.VISIBLE : View.GONE);
-                binding.scanProgress.setVisibility(active ? View.VISIBLE : View.GONE);
-                binding.textScanning.setVisibility(active ? View.VISIBLE : View.GONE);
-                // Fin d'un scan lancé ici : ouvre les Résultats (sauf erreur).
-                if (!active && scanLaunched) {
-                    scanLaunched = false;
-                    if (viewModel.getError().getValue() == null) {
-                        openResults();
+                // Un seul bloc d'action visible : « Scanner » OU la progression.
+                binding.buttonScan.setVisibility(active ? View.GONE : View.VISIBLE);
+                binding.cardProgress.setVisibility(active ? View.VISIBLE : View.GONE);
+                if (active) {
+                    binding.buttonCancel.setEnabled(true);
+                    binding.textScanning.setText(ScanUi.phaseLabel(
+                            SimpleScanActivity.this, viewModel.getPhase().getValue()));
+                } else {
+                    showLastScan();
+                    // Scan Simple terminé normalement : ouvre les résultats (une seule
+                    // fois ; jamais après une annulation ou une erreur).
+                    if (viewModel.takeOpenResultsRequest()) {
+                        startActivity(new Intent(SimpleScanActivity.this,
+                                SimpleResultsActivity.class));
                     }
                 }
             }
         });
-        viewModel.getProgress().observe(this, new androidx.lifecycle.Observer<Pair<Integer, Integer>>() {
+        viewModel.getPhase().observe(this, new Observer<NetworkScanner.Phase>() {
             @Override
-            public void onChanged(Pair<Integer, Integer> value) {
-                if (value == null) {
-                    return;
+            public void onChanged(NetworkScanner.Phase phase) {
+                if (phase != null && viewModel.isScanning()) {
+                    binding.textScanning.setText(ScanUi.phaseLabel(
+                            SimpleScanActivity.this, phase));
                 }
-                binding.scanProgress.setMax(Math.max(1, value.second));
-                binding.scanProgress.setProgress(value.first);
             }
         });
-        // Scan terminé : mémorise et ouvre l'écran Résultats (voir observer ci-dessus).
-        viewModel.getError().observe(this, new androidx.lifecycle.Observer<String>() {
+        viewModel.getProgress().observe(this, new Observer<Pair<Integer, Integer>>() {
+            @Override
+            public void onChanged(Pair<Integer, Integer> value) {
+                ScanUi.bindProgress(binding.scanProgress, binding.textProgress, value);
+            }
+        });
+        viewModel.getError().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String message) {
                 if (message != null) {
                     Toast.makeText(SimpleScanActivity.this, message, Toast.LENGTH_LONG).show();
+                    // Affiché une fois : une rotation ne le rejoue pas.
+                    viewModel.consumeError();
                 }
             }
         });
     }
 
-    private boolean scanLaunched;
-    // Début du scan : pour la statistique de durée (historique, Étape 4).
-    private long scanStartMs;
-
     private void onScanClicked() {
         // Avertissement légal obligatoire avant tout scan (Étape 5).
-        if (!com.example.netscan.ui.common.LegalWarningDialog.ensureAccepted(this)) {
+        if (!LegalWarningDialog.ensureAccepted(this)) {
             return;
         }
-        // La permission Wi-Fi ne sert qu'à afficher le SSID : elle est demandée
-        // au mieux et ne bloque jamais le scan (indispensable en Ethernet,
-        // où aucune permission n'est requise).
+        // La permission Wi-Fi ne sert qu'à afficher le SSID : demandée au mieux,
+        // elle ne bloque jamais le scan (indispensable en Ethernet, où aucune
+        // permission n'est requise).
         NetworkDetails current = NetworkInfoHelper.getDetails(this);
         if (!PermissionHelper.hasPermissions(this) && current != null && current.isWifi()) {
             PermissionHelper.requestPermissions(this);
         }
-        startSimpleScan();
+        // Plage = interface réseau courante (Wi-Fi, Ethernet, USB...), jamais
+        // une plage périmée ; sans réseau, le ViewModel publie l'erreur.
+        viewModel.startSimpleScan(this);
     }
 
-    // Config automatique : préfixe réel de l'interface courante (Wi-Fi,
-    // Ethernet, USB...), découverte seule. Le CIDR vient de l'interface
-    // réseau, pas du Wi-Fi : un câble branché scanne comme le Wi-Fi.
-    private void startSimpleScan() {
-        viewModel.loadNetwork(this);
-        NetworkDetails details = NetworkInfoHelper.getDetails(this);
-        String cidr = NetworkInfoHelper.getScanCidr(details);
-        if (cidr == null) {
-            Toast.makeText(this, R.string.network_required, Toast.LENGTH_LONG).show();
-            return;
-        }
-        ScanConfig config = viewModel.getConfig();
-        config.setCidr(cidr);
-        config.setPortScanEnabled(false);
-        config.setTimeoutMs(800);
-        config.setThreadCount(50);
-        scanLaunched = true;
-        scanStartMs = System.currentTimeMillis();
-        viewModel.startScan(this);
-    }
-
-    // Mémorise le scan pour l'écran Résultats (survit au changement de mode)
-    // + sauvegarde dans l'historique chiffré (Étape 4).
-    private void openResults() {
-        NetScanApp app = (NetScanApp) getApplication();
-        NetworkDetails details = NetworkInfoHelper.getDetails(this);
-        String ownIp = details != null ? details.getIpAddress() : null;
-        String gateway = details != null ? details.getGateway() : app.getLastGatewayIp();
-        String ssid = details != null ? details.getDisplayName() : null;
-        List<Host> hosts = viewModel.getHosts().getValue();
-        app.storeLastScan(hosts, viewModel.getConfig(), ownIp, gateway);
-        long duration = System.currentTimeMillis() - scanStartMs;
-        com.example.netscan.data.ScanRepository.getInstance(this).saveScan(
-                hosts, ssid, ownIp, gateway, duration, app.getKnownIps(), null);
-        startActivity(new Intent(this, SimpleResultsActivity.class));
-        showLastScan();
-    }
-
+    // « Dernier scan » : date, nombre d'appareils et accès direct aux résultats.
     private void showLastScan() {
         NetScanApp app = (NetScanApp) getApplication();
         long when = app.getLastScanTimestamp();
         if (when <= 0) {
             binding.textLastScan.setText(R.string.simple_no_last_scan);
+            binding.buttonLastResults.setVisibility(View.GONE);
             return;
         }
         // « Le %1$s à %2$s » : jour puis heure, deux arguments distincts.
         String day = new SimpleDateFormat("dd/MM", Locale.FRENCH).format(new Date(when));
         String time = new SimpleDateFormat("HH:mm", Locale.FRENCH).format(new Date(when));
-        binding.textLastScan.setText(getString(R.string.simple_last_scan_format, day, time));
+        binding.textLastScan.setText(getString(R.string.simple_last_scan_format, day, time)
+                + "\n" + getString(R.string.simple_last_scan_devices_format,
+                app.getLastHosts().size()));
+        binding.buttonLastResults.setVisibility(View.VISIBLE);
     }
 
     @Override

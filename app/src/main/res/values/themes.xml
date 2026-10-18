@@ -19,6 +19,12 @@
         <item name="colorSecondaryContainer">@color/secondary_container</item>
         <item name="colorOnSecondaryContainer">@color/on_secondary_container</item>
 
+        <!-- Tertiary colors (Apple dans les pastilles d'OS) -->
+        <item name="colorTertiary">@color/tertiary</item>
+        <item name="colorOnTertiary">@color/on_tertiary</item>
+        <item name="colorTertiaryContainer">@color/tertiary_container</item>
+        <item name="colorOnTertiaryContainer">@color/on_tertiary_container</item>
+
         <!-- Surface and background -->
         <item name="colorSurface">@color/surface</item>
         <item name="colorOnSurface">@color/on_surface</item>
@@ -133,48 +139,65 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-    <!-- Custom button styles -->
+    <!-- Boutons : UN système cohérent, hauteur tactile >= 48dp.
+         Plein = action principale, Tonal = secondaire, Outlined = tertiaire,
+         Borderless = lien discret, Destructive = effacer.
+         Plus de hauteurs fixes ni d'élévation forcée : le texte n'est plus
+         rogné (grandes polices) et les boutons plats n'ont plus d'ombre. -->
     <style name="Widget.NetScan.Button" parent="Widget.Material3.Button">
-        <item name="android:insetLeft">0dp</item>
+        <item name="android:minHeight">@dimen/touch_target_min</item>
         <item name="android:insetTop">0dp</item>
-        <item name="android:insetRight">0dp</item>
         <item name="android:insetBottom">0dp</item>
-        <item name="android:paddingLeft">24dp</item>
-        <item name="android:paddingTop">12dp</item>
-        <item name="android:paddingRight">24dp</item>
-        <item name="android:paddingBottom">12dp</item>
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerRadius">12dp</item>
-        <item name="android:elevation">2dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="cornerRadius">@dimen/button_corner_radius</item>
+        <item name="iconGravity">textStart</item>
     </style>
 
-    <style name="Widget.NetScan.Button.Borderless" parent="Widget.Material3.Button.TextButton">
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingBottom">8dp</item>
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerRadius">8dp</item>
+    <style name="Widget.NetScan.Button.Filled" />
+
+    <style name="Widget.NetScan.Button.Large">
+        <item name="android:minHeight">@dimen/button_height_main</item>
+        <item name="android:paddingLeft">24dp</item>
+        <item name="android:paddingRight">24dp</item>
     </style>
 
-    <style name="Widget.NetScan.Button.Filled" parent="Widget.Material3.Button">
-        <item name="android:paddingLeft">24dp</item>
-        <item name="android:paddingTop">12dp</item>
-        <item name="android:paddingRight">24dp</item>
-        <item name="android:paddingBottom">12dp</item>
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerRadius">12dp</item>
-        <item name="android:elevation">2dp</item>
+    <style name="Widget.NetScan.Button.Tonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:minHeight">@dimen/touch_target_min</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="cornerRadius">@dimen/button_corner_radius</item>
+        <item name="iconGravity">textStart</item>
     </style>
 
     <style name="Widget.NetScan.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="android:paddingLeft">24dp</item>
-        <item name="android:paddingTop">12dp</item>
-        <item name="android:paddingRight">24dp</item>
-        <item name="android:paddingBottom">12dp</item>
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerRadius">12dp</item>
-        <item name="android:elevation">0dp</item>
+        <item name="android:minHeight">@dimen/touch_target_min</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="cornerRadius">@dimen/button_corner_radius</item>
+        <item name="iconGravity">textStart</item>
+    </style>
+
+    <style name="Widget.NetScan.Button.Borderless" parent="Widget.Material3.Button.TextButton">
+        <item name="android:minHeight">@dimen/touch_target_min</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="iconGravity">textStart</item>
     </style>
 
     <!-- Action destructive : « Effacer », « Supprimer ». Contour + texte
@@ -182,14 +205,25 @@
          l'action principale). -->
     <style name="Widget.NetScan.Button.Destructive" parent="Widget.Material3.Button.OutlinedButton">
         <item name="android:minHeight">@dimen/touch_target_min</item>
-        <item name="android:paddingLeft">24dp</item>
-        <item name="android:paddingRight">24dp</item>
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerRadius">12dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="cornerRadius">@dimen/button_corner_radius</item>
         <item name="android:textColor">?attr/colorError</item>
         <item name="strokeColor">?attr/colorError</item>
         <item name="strokeWidth">1dp</item>
-        <item name="android:elevation">0dp</item>
+    </style>
+
+    <!-- Carte de section (écrans Expert, Réglages) : contour fin, sans ombre. -->
+    <style name="Widget.NetScan.Card" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardBackgroundColor">?attr/colorSurface</item>
+        <item name="strokeColor">@color/outline_variant</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
+        <item name="cardElevation">0dp</item>
     </style>
 
     <!-- Custom input styles -->

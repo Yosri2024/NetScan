@@ -13,6 +13,8 @@ import com.example.netscan.alerts.AdviceProvider;
 import com.example.netscan.alerts.Alert;
 import com.example.netscan.alerts.AlertHelper;
 import com.example.netscan.data.model.Host;
+import com.example.netscan.data.model.OsInfo;
+import com.example.netscan.ui.common.OsUi;
 import com.example.netscan.databinding.SimpleActivityResultsBinding;
 
 import java.util.List;
@@ -45,6 +47,14 @@ public class SimpleResultsActivity extends AppCompatActivity
 
         binding.textAdvice.setText(AdviceProvider.generalAdvice()
                 + "\n\n" + AdviceProvider.accuracyReminder());
+        // Conseils repliés par défaut : ils ne mangent plus la place de la liste.
+        binding.cardAdvice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean show = binding.textAdvice.getVisibility() != View.VISIBLE;
+                binding.textAdvice.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
 
         // Les marquages persistés (base chiffrée) resynchronisent l'affichage,
         // y compris après un redémarrage (la mémoire vive est alors vide).
@@ -82,7 +92,7 @@ public class SimpleResultsActivity extends AppCompatActivity
         Alert alert = AlertHelper.summary(hosts, app.getKnownIps(),
                 app.getLastOwnIp(), app.getLastGatewayIp());
         boolean ok = alert.getLevel() == Alert.Level.OK;
-        binding.bannerSummary.setBackgroundColor(ContextCompat.getColor(this,
+        binding.bannerSummary.setCardBackgroundColor(ContextCompat.getColor(this,
                 ok ? R.color.status_ok : R.color.status_warning));
         // Le texte suit le fond : lisible en thème clair comme en mode nuit.
         binding.textSummary.setTextColor(ContextCompat.getColor(this, R.color.status_on));
@@ -91,10 +101,13 @@ public class SimpleResultsActivity extends AppCompatActivity
 
     @Override
     public void onDeviceClicked(Host host) {
+        OsInfo os = OsUi.resolve(this, host, app.getLastOwnIp(), app.getLastGatewayIp());
         SimpleDeviceDialog dialog = SimpleDeviceDialog.newInstance(
                 host.getIpAddress(),
                 com.example.netscan.utils.DeviceNamer.nameFor(
-                        host, app.getLastOwnIp(), app.getLastGatewayIp()));
+                        host, app.getLastOwnIp(), app.getLastGatewayIp()),
+                os,
+                OsUi.describe(this, os, host.getTtl(), false));
         dialog.show(getSupportFragmentManager(), "device");
     }
 

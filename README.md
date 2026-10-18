@@ -20,7 +20,8 @@
 Pensé pour un usage quotidien :
 - Un bouton : **« Scanner mon réseau »**
 - Résultats lisibles avec codes couleur (vert = appareil connu, orange = à vérifier)
-- Détail de chaque appareil : adresse IP, ports ouverts, latence
+- **Système estimé de chaque appareil** (Windows, Android, Apple, Linux, TV, imprimante, box…) : icône, pastille colorée, niveau de confiance et indices retenus
+- Détail de chaque appareil : adresse IP, latence, système estimé
 - Conseils contextuels et historique des scans
 
 ### 🔧 Mode Expert
@@ -28,7 +29,9 @@ Pour une analyse plus fine :
 - **Plage CIDR** personnalisée (bouton « Détecter » pour la remplir automatiquement)
 - **Ports** : préréglage 1-1024, 1-65535, ou liste personnalisée (ex. `22,80,443` ou `1-100,8000-9000`)
 - **Timeout** (100 à 10 000 ms, 800 ms par défaut) et **nombre de threads** (1 à 256, 50 par défaut)
-- Bannières de services, résolution de nom, latence
+- **Identification de l'OS** (interrupteur dans la configuration) : pastille par hôte, puis fiche détaillée au toucher (TTL du ping, bannières, indices un par un)
+- Bannières de services (SSH, en-tête HTTP `Server`), résolution de nom, latence
+- Configuration **mémorisée** (chiffrée) : un aller-retour Simple ↔ Expert, les réglages ou une rotation ne forcent plus à tout ressaisir
 - Historique détaillé et **comparaison** entre deux scans (appareils apparus / disparus)
 - **Export JSON ou CSV** via le sélecteur de fichiers Android
 
@@ -38,9 +41,24 @@ Pour une analyse plus fine :
 
 1. **Détection du réseau** : l'application déduit le sous-réseau à partir de la connexion active.
 2. **Découverte des hôtes** : `InetAddress.isReachable`, puis repli sur des connexions TCP (ports 80, 443, 53, 8080, 8443, 22, 445, 9100), car le ping ICMP est souvent filtré sans droits root.
-3. **Découverte de services** : mDNS / NSD pour identifier certains appareils par leur nom.
-4. **Scan de ports** (optionnel en mode Simple) : TCP parallélisé avec timeout configurable.
-5. **Bannières** : lecture des bannières de service quand elles sont disponibles.
+3. **Découverte de services** : mDNS / NSD (AirPlay, Google Cast, imprimantes, SSH, SMB…). On retient le **type** de service et le modèle annoncé, pas seulement le nom.
+4. **Identification du système** (modes Simple **et** Expert) : voir ci-dessous.
+5. **Scan de ports** (Expert uniquement) : TCP parallélisé avec timeout configurable.
+6. **Bannières** : lecture des bannières de service (SSH) et de l'en-tête HTTP `Server`.
+
+### 🖥️ Identification du système d'exploitation
+
+Sans droits root, Android ne permet pas un vrai fingerprinting TCP/IP : le résultat est une **estimation**, toujours accompagnée d'un niveau de confiance (élevée / moyenne / faible) et des indices retenus. Chaque indice ajoute des points à une famille d'OS ; la meilleure famille gagne.
+
+| Indice | Exemple |
+|---|---|
+| **TTL du ping** (commande système `ping`, sans root) | 64 → Linux/Android/Apple, 128 → Windows, 255 → équipement réseau |
+| **Ports « signatures »** | 3389 / 135 → Windows, 62078 → iOS, 9100 → imprimante, 8008 → Chromecast, 5555 → Android (ADB) |
+| **Nom d'hôte** | `DESKTOP-xxxx` → Windows, `android-xxxx`, `iPhone`, `raspberrypi` |
+| **Services mDNS** | `_airplay` → Apple, `_googlecast` → TV, `_ipp` → imprimante |
+| **Bannières** | `OpenSSH … Debian`, `Server: Microsoft-IIS`, `dropbear` |
+
+Les noms courts (`nas`, `cam`, `tv`…) ne sont reconnus qu'en **mot entier** : « banana » n'est plus pris pour un NAS. Un TTL seul ne donne jamais mieux qu'une estimation « possible ». Les cas de certitude sont traités à part : le téléphone qui scanne est un Android connu, et la passerelle est une box ou un routeur. L'OS est conservé dans l'historique et dans les exports JSON/CSV.
 
 Limites : à partir d'Android 10, l'accès aux adresses MAC et à `/proc/net/arp` est restreint. Les noms d'appareils reposent donc sur le DNS et mDNS, et peuvent être approximatifs. Les plages plus larges que `/16` sont refusées.
 
@@ -95,8 +113,8 @@ L'APK de debug se trouve dans `app/build/outputs/apk/debug/`.
 
 ## 🧪 Tests
 
-- **Tests unitaires** (JUnit 4) : calcul de sous-réseaux, validation des saisies, comparaison de scans, alertes, terminologie, informations réseau
-- **Tests instrumentés** : chiffrement (`CryptoManager`) et dépôt de scans (`ScanRepository`)
+- **Tests unitaires** (JUnit 4) : calcul de sous-réseaux, validation des saisies, comparaison de scans, alertes, terminologie, informations réseau, **identification d'OS** (score, TTL, faux positifs, persistance), lecture des en-têtes HTTP, analyse du `ping`, noms d'appareils, configuration Expert
+- **Tests instrumentés** : chiffrement (`CryptoManager`) et dépôt de scans (`ScanRepository`, dont l'OS conservé dans l'historique)
 
 ---
 
@@ -115,6 +133,8 @@ app/src/main/java/com/example/netscan/
 ├── utils/       # Formats de date, nommage d'appareils, comparaison de scans
 └── viewmodel/   # ScanViewModel, HistoryViewModel, SettingsViewModel
 ```
+
+Le `ScanViewModel` est rattaché à l'**application** (`NetScanApp` fournit son `ViewModelStore`) et non à un écran : le scan, sa progression et ses résultats sont partagés par les modes Simple et Expert, et l'enregistrement du scan (historique + « dernier scan ») s'y fait une seule fois.
 
 **Bibliothèques principales** : AndroidX (AppCompat, ConstraintLayout, Lifecycle), Material Components, Room, SQLCipher, DataStore, Gson. Versions centralisées dans `gradle/libs.versions.toml`.
 

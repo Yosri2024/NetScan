@@ -1,5 +1,6 @@
 package com.example.netscan.ui.simple;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,9 @@ import com.example.netscan.NetScanApp;
 import com.example.netscan.R;
 import com.example.netscan.alerts.AlertHelper;
 import com.example.netscan.data.model.Host;
+import com.example.netscan.data.model.OsInfo;
 import com.example.netscan.databinding.SimpleItemDeviceBinding;
+import com.example.netscan.ui.common.OsUi;
 import com.example.netscan.utils.DeviceNamer;
 
 import java.util.ArrayList;
@@ -22,8 +25,9 @@ import java.util.List;
 import java.util.Set;
 
 // Fichier : ui/simple/DeviceSimpleAdapter.java
-// Rôle : liste des appareils Simple (Étape 3). Chaque ligne : point de
-// couleur (vert reconnu, orange à vérifier) + nom clair + sous-texte.
+// Rôle : liste des appareils Simple. Chaque ligne : icône selon le système
+// estimé, nom clair, statut (point vert reconnu / orange à vérifier + texte)
+// et pastille du système d'exploitation.
 // La couleur n'est jamais seule : un texte l'accompagne (daltonisme).
 public class DeviceSimpleAdapter extends RecyclerView.Adapter<DeviceSimpleAdapter.DeviceViewHolder> {
 
@@ -94,16 +98,23 @@ public class DeviceSimpleAdapter extends RecyclerView.Adapter<DeviceSimpleAdapte
         }
 
         void bind(final Host host) {
+            Context context = itemView.getContext();
             boolean recognized = AlertHelper.isRecognized(host, knownIps, ownIp, gatewayIp);
-            int dotColor = ContextCompat.getColor(itemView.getContext(), recognized
+            int dotColor = ContextCompat.getColor(context, recognized
                     ? R.color.status_ok : R.color.status_warning);
-            binding.dotStatus.getBackground().setColorFilter(dotColor,
+            binding.dotStatus.getBackground().mutate().setColorFilter(dotColor,
                     android.graphics.PorterDuff.Mode.SRC_IN);
+
+            OsInfo os = OsUi.resolve(context, host, ownIp, gatewayIp);
+            OsUi.bindIcon(binding.imageOs, binding.iconContainer, os);
+            OsUi.bindChip(binding.chipOs, os);
+
             binding.textDeviceName.setText(DeviceNamer.nameFor(host, ownIp, gatewayIp));
             binding.textDeviceSub.setText(DeviceNamer.subtextFor(host, recognized, ownIp));
-            // Accessibilité : le statut est lu à voix haute (TalkBack).
-            binding.getRoot().setContentDescription(
-                    binding.textDeviceName.getText() + ", " + binding.textDeviceSub.getText());
+            // Accessibilité : nom, statut et système sont lus à voix haute (TalkBack).
+            binding.getRoot().setContentDescription(binding.textDeviceName.getText() + ", "
+                    + binding.textDeviceSub.getText() + ", "
+                    + context.getString(R.string.simple_device_os_format, os.label()));
             binding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

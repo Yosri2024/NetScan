@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Fichier : res/layout/simple_activity_results.xml -->
-<!-- Rôle : Écran 2 du mode Simple (Étape 3). Barre de retour, bandeau
-     résumé, liste des appareils, encart Conseils. -->
+<!-- Rôle : Écran 2 du mode Simple (refonte). Barre de retour, bandeau
+     résumé, liste des appareils (avec leur système estimé), encart Conseils
+     repliable (il prenait de la place en permanence). -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorBackground"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    android:background="?attr/colorBackground">
+    android:orientation="vertical">
 
-    <!-- Barre du haut : retour seul (pas de pastille sur les résultats). -->
+    <!-- Barre du haut : retour + titre + compteur. -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface"
         android:gravity="center_vertical"
+        android:minHeight="?attr/actionBarSize"
         android:orientation="horizontal"
-        android:background="?attr/colorSurface">
+        android:paddingStart="@dimen/screen_padding_small"
+        android:paddingEnd="@dimen/screen_padding">
 
         <ImageButton
             android:id="@+id/button_back"
             android:layout_width="@dimen/touch_target_min"
             android:layout_height="@dimen/touch_target_min"
-            android:layout_marginStart="@dimen/screen_padding_small"
-            android:layout_marginTop="@dimen/screen_padding_small"
-            android:layout_marginBottom="@dimen/screen_padding_small"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/common_back_description"
             android:scaleType="centerInside"
@@ -34,7 +35,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/screen_padding"
+            android:layout_marginStart="@dimen/screen_padding_small"
             android:layout_weight="1"
             android:text="@string/simple_results_title"
             android:textAppearance="@style/TextAppearance.NetScan.Headline5"
@@ -44,85 +45,112 @@
             android:id="@+id/text_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/screen_padding"
-            android:text="@string/simple_results_empty"
             android:textAppearance="@style/TextAppearance.NetScan.LabelMedium"
             android:textColor="?attr/colorPrimary" />
     </LinearLayout>
 
-    <!-- Bandeau résumé : fond vert ou orange selon la situation. -->
-    <FrameLayout
+    <!-- Bandeau résumé : vert ou orange selon la situation (couleur fixée par le code). -->
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/banner_summary"
+        style="@style/Widget.NetScan.Card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/screen_padding_large"
-        android:background="?attr/colorPrimaryContainer">
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginTop="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding"
+        app:strokeWidth="0dp">
 
         <TextView
             android:id="@+id/text_summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="@dimen/screen_padding"
             android:textAppearance="@style/TextAppearance.NetScan.BodyLarge"
-            android:textColor="?attr/colorOnPrimaryContainer"
+            android:textColor="@color/status_on"
             android:textStyle="bold" />
-    </FrameLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-    <!-- Liste des appareils détectés -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_devices"
+    <!-- Liste + état vide au même endroit : le texte vide n'est plus poussé hors écran. -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:padding="@dimen/screen_padding" />
+        android:layout_weight="1">
 
-    <!-- État vide pro simple -->
-    <TextView
-        android:id="@+id/text_empty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/screen_padding_large"
-        android:gravity="center"
-        android:text="@string/simple_results_empty"
-        android:textAppearance="@style/TextAppearance.NetScan.BodyMedium"
-        android:textColor="?attr/colorOnSurfaceVariant"
-        android:visibility="gone" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_devices"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/screen_padding_small"
+            android:paddingBottom="@dimen/screen_padding_small" />
 
-    <!-- Encart Conseils : texte nuancé, jamais alarmiste. -->
+        <TextView
+            android:id="@+id/text_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="@dimen/screen_padding_large"
+            android:text="@string/simple_results_empty"
+            android:textAppearance="@style/TextAppearance.NetScan.BodyMedium"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <!-- Encart Conseils repliable : texte nuancé, jamais alarmiste. -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_advice"
+        style="@style/Widget.NetScan.Card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/screen_padding"
+        android:layout_marginStart="@dimen/screen_padding"
         android:layout_marginTop="@dimen/screen_padding_small"
+        android:layout_marginEnd="@dimen/screen_padding"
         android:layout_marginBottom="@dimen/screen_padding"
+        android:clickable="true"
+        android:focusable="true"
         app:cardBackgroundColor="?attr/colorSurfaceVariant"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="0dp"
-        app:cardUseCompatPadding="true">
+        app:strokeWidth="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/screen_padding_large"
-            android:gravity="center_vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/screen_padding">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="@dimen/screen_padding_small"
-                android:src="@drawable/ic_device_warning"
-                app:tint="?attr/colorWarning" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/touch_target_min"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="@dimen/screen_padding_small"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_info"
+                    app:tint="?attr/colorWarning" />
+
+                <TextView
+                    android:id="@+id/text_advice_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/simple_advice_title"
+                    android:textAppearance="@style/TextAppearance.NetScan.TitleMedium"
+                    android:textColor="?attr/colorOnSurface" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/text_advice"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginTop="@dimen/screen_padding_small"
                 android:textAppearance="@style/TextAppearance.NetScan.BodyMedium"
-                android:textColor="?attr/colorOnSurface" />
+                android:textColor="?attr/colorOnSurface"
+                android:visibility="gone" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
-
 </LinearLayout>

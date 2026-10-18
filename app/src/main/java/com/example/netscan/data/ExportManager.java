@@ -5,6 +5,8 @@ import android.net.Uri;
 
 import com.example.netscan.data.db.HostEntity;
 import com.example.netscan.data.db.ScanEntity;
+import com.example.netscan.data.model.OsInfo;
+import com.example.netscan.utils.OsGuesser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -52,6 +54,9 @@ public final class ExportManager {
                 export.openPorts = host.openPortsCsv;
                 export.banner = host.banner;
                 export.serviceName = host.serviceName;
+                OsInfo os = osOf(host);
+                export.os = os.label();
+                export.osConfidence = os.confidence().description();
                 payload.hosts.add(export);
             }
         }
@@ -66,7 +71,7 @@ public final class ExportManager {
                 .append(escape(scan.ownIp)).append(',')
                 .append(escape(scan.gatewayIp)).append(',')
                 .append(scan.durationMs).append('\n');
-        csv.append("ip,hostname,latency_ms,open_ports,banner,service\n");
+        csv.append("ip,hostname,latency_ms,open_ports,banner,service,os,os_confidence\n");
         if (hosts != null) {
             for (HostEntity host : hosts) {
                 csv.append(escape(host.ip)).append(',')
@@ -74,7 +79,9 @@ public final class ExportManager {
                         .append(host.latencyMs).append(',')
                         .append(escape(host.openPortsCsv)).append(',')
                         .append(escape(host.banner)).append(',')
-                        .append(escape(host.serviceName)).append('\n');
+                        .append(escape(host.serviceName)).append(',')
+                        .append(escape(osOf(host).label())).append(',')
+                        .append(escape(osOf(host).confidence().description())).append('\n');
             }
         }
         return csv.toString();
@@ -97,9 +104,20 @@ public final class ExportManager {
         }
     }
 
+    // OS stocké avec le scan, ou recalculé pour les anciens scans (osCode null).
+    private static OsInfo osOf(HostEntity host) {
+        return OsGuesser.analyze(ScanRepository.toHost(host));
+    }
+
     private static String escape(String value) {
         if (value == null) {
             return "";
+        }
+        // Noms d'hôte, bannières et services viennent du réseau (donc de tiers) :
+        // un texte commençant par = + - @ serait exécuté comme formule par un
+        // tableur. On le neutralise avec une apostrophe.
+        if (!value.isEmpty() && "=+-@\t\r".indexOf(value.charAt(0)) >= 0) {
+            value = "'" + value;
         }
         boolean quoted = value.contains(",") || value.contains("\"") || value.contains("\n");
         String escaped = value.replace("\"", "\"\"");
@@ -123,5 +141,7 @@ public final class ExportManager {
         String openPorts;
         String banner;
         String serviceName;
+        String os;
+        String osConfidence;
     }
 }

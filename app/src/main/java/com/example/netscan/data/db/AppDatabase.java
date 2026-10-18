@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.netscan.security.DatabaseKeyProvider;
 
@@ -22,13 +24,22 @@ import net.zetetic.database.sqlcipher.SupportOpenHelperFactory;
 // null au lieu de lever : l'historique se vide, l'application reste
 // utilisable. Jamais de repli en base non chiffrée.
 @Database(entities = {ScanEntity.class, HostEntity.class, KnownDeviceEntity.class},
-        version = 1, exportSchema = false)
+        version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final String TAG = "AppDatabase";
     private static final String DB_NAME = "netscan.db";
     private static volatile AppDatabase instance;
     private static boolean nativeLoaded;
+
+    // v1 -> v2 : OS estimé de chaque hôte (historique et export). Les anciens
+    // scans gardent osCode = NULL : l'OS est alors recalculé à la lecture.
+    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE hosts ADD COLUMN osCode TEXT");
+        }
+    };
 
     public abstract ScanDao scanDao();
 
@@ -63,6 +74,7 @@ public abstract class AppDatabase extends RoomDatabase {
         try {
             return Room.databaseBuilder(app, AppDatabase.class, DB_NAME)
                     .openHelperFactory(new SupportOpenHelperFactory(passphrase))
+                    .addMigrations(MIGRATION_1_2)
                     .build();
         } catch (Exception e) {
             Log.e(TAG, "Ouverture de la base chiffrée impossible.", e);
